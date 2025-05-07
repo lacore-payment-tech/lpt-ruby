@@ -1,0 +1,57 @@
+module LPT
+  class Configuration
+    attr_accessor :api_username,
+                  :api_password,
+                  :entity,
+                  :merchant,
+                  :environment,
+                  :logger
+
+    attr_reader :api_base,
+                :cx_base,
+                :cx_api_base,
+                :base_addresses,
+                :open_timeout,
+                :read_timeout,
+                :write_timeout,
+                :proxy,
+                :verify_ssl_certs,
+                :ca_bundle_path,
+                :log_level,
+                :max_network_retries,
+                :initial_network_retry_delay,
+                :max_network_retry_delay,
+                :ca_store
+
+    def initialize
+      @environment = LPT::Environment.active_env
+      @ca_bundle_path = LPT::DEFAULT_CA_BUNDLE_PATH
+      @verify_ssl_certs = true
+
+      @max_network_retries = 2
+      @initial_network_retry_delay = 0.5
+      @max_network_retry_delay = 5
+
+      @open_timeout = 30
+      @read_timeout = 80
+      @write_timeout = 30
+
+      @api_base = LPT::Environment.base_url("api")
+      @cx_base = LPT::Environment.base_url("cx")
+      @cx_api_base = LPT::Environment.base_url("api.cx")
+      @base_addresses = {
+        api: @api_base,
+        cx: @cx_base,
+        cx_api: @cx_api_base,
+      }
+    end
+
+    def self.setup
+      new.tap do |instance|
+        yield(instance) if block_given?
+      end
+    end
+
+  end
+
+end
