@@ -1,4 +1,5 @@
 source "https://rubygems.org"
+git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
 # Specify your gem's dependencies in lpt.gemspec.
 gemspec
@@ -10,15 +11,8 @@ gem "pg"
 gem "sprockets-rails"
 
 gem "faraday"
-# gem "httpx"
-# https://honeyryderchuck.gitlab.io/httpx/wiki/Faraday-Adapter
-# https://mattbrictson.com/blog/advanced-http-techniques-in-ruby#aside-faraday-middleware-configuration-pitfalls
-
-# gem 'faraday-typhoeus' <- curl
-# https://github.com/dleavitt/faraday-typhoeus
-
-# Omakase Ruby styling [https://github.com/rails/rubocop-rails-omakase/]
-gem "rubocop-rails-omakase", require: false
-
 # Start debugger with binding.b [https://github.com/ruby/debug]
 gem "debug", ">= 1.0.0"
+
+## required for fixing rails 7.0.8.1 issues, especially outside of tree
+gem "concurrent-ruby", "<=1.3.4"

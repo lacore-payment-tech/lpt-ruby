@@ -5,6 +5,7 @@ module LPT
     class Payment < APIResource
       include LPT::Resource::Retrieve
       include LPT::Resource::Create
+      include LPT::Resource::Update
 
       OBJECT_NAME = "payment"
       def self.object_name
@@ -35,6 +36,7 @@ module LPT
       attribute :authorization
       attribute :presentment
       attribute :reversal
+      attribute :refunds
 
       attribute :amount_refundable
 

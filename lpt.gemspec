@@ -22,9 +22,10 @@ Gem::Specification.new do |spec|
     Dir["{app,config,db,lib}/**/*", "MIT-LICENSE", "Rakefile", "README.md"]
   end
 
-  spec.add_dependency "rails", ">= 7.2.2.1"
+  spec.add_dependency "rails", '>=7.0.8.1'
   spec.add_dependency "faraday", ">= 2.13.1"
   # gem "httpx"
+  #
   # https://honeyryderchuck.gitlab.io/httpx/wiki/Faraday-Adapter
   # https://mattbrictson.com/blog/advanced-http-techniques-in-ruby#aside-faraday-middleware-configuration-pitfalls
 

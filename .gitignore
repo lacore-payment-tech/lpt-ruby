@@ -11,3 +11,6 @@
 /.github
 /*rbs_collection.lock.yaml
 /*rbs_collection.yaml
+/.ruby_version
+/.ruby_gemset
+/Gemfile.lock

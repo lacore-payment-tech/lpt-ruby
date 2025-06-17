@@ -2,10 +2,7 @@
 
 module LPT
   class Engine < ::Rails::Engine
-    # config.lpt = ::LPT
-
     isolate_namespace LPT
-    # engine_name "lpt"
     paths["app/models"] << "app/resources"
 
     config.after_initialize do
@@ -19,6 +16,8 @@ module LPT
         ::LPT.api_username ||= lpt_config.fetch(:username, nil)
         ::LPT.api_password ||= lpt_config.fetch(:password, nil)
         ::LPT.merchant ||= lpt_config.fetch(:merchant, nil)
+        ::LPT.merchant_account ||= lpt_config.fetch(:merchant_account, nil)
+        ::LPT.entity ||= lpt_config.fetch(:entity, nil)
 
         env = lpt_config.fetch(:environment, nil)
         puts "Environment from config: #{env}"

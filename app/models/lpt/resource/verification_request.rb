@@ -9,8 +9,11 @@ module LPT
       attribute :category
       attribute :type
       attribute :instrument
+      attribute :profile
+      attribute :subject
       attribute :merchant
       attribute :merchant_account
+      attribute :url
 
 
     end

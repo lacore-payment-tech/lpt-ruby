@@ -4,6 +4,9 @@ module LPT
   module Resource
     class Verification < APIResource
       include LPT::Resource::Retrieve
+      include LPT::Resource::Create
+      include LPT::Resource::Update
+
       OBJECT_NAME = "verification"
       def self.object_name
         "verification"

@@ -1,20 +1,7 @@
 # frozen_string_literal: true
-
-require "rails"
-# require "active_support/core_ext/numeric/time"
-# require "active_support/dependencies"
-# require "orm_adapter"
-require "set"
-require "securerandom"
-# require "responders"
-require "faraday"
-
-
 require "lpt/version"
 require "lpt/environment"
 require "lpt/engine"
-
-
 
 module LPT
   DEFAULT_CA_BUNDLE_PATH = __dir__ + "/data/ca-certificates.crt"
@@ -23,7 +10,6 @@ module LPT
   LEVEL_DEBUG = Logger::DEBUG
   LEVEL_ERROR = Logger::ERROR
   LEVEL_INFO = Logger::INFO
-
 
   mattr_accessor :api_username
   @@api_username = nil
@@ -36,6 +22,10 @@ module LPT
 
   mattr_accessor :merchant
   @@merchant = nil
+
+  mattr_accessor :merchant_account
+  @@merchant = nil
+
 
   mattr_accessor :environment
   @@environment = nil
@@ -117,72 +107,4 @@ module LPT
   def self.client_reset
     @@client = nil
   end
-
-  # class << self
-
-    # mattr_accessor [
-    #
-    #                ], instance_accessor: false
-    #
-    # mattr_accessor [
-    #
-    #              ], instance_accessor: false
-
-    # extend Forwardable
-    #
-    # attr_reader :config
-    #
-    #
-    #
-    # # User configurable options
-    # def_delegators :@config, :api_username, :api_username=
-    # def_delegators :@config, :api_password, :api_password=
-    # def_delegators :@config, :entity, :entity=
-    # def_delegators :@config, :merchant, :merchant=
-    # def_delegators :@config, :environment, :environment=
-    # def_delegators :@config, :logger, :logger=
-    #
-    # def_delegators :@config, :api_base, :api_base=
-    # def_delegators :@config, :cx_base, :cx_base=
-    # def_delegators :@config, :cx_api_base, :cx_api_base=
-    # def_delegators :@config, :base_addresses, :base_addresses=
-    # def_delegators :@config, :open_timeout, :open_timeout=
-    # def_delegators :@config, :read_timeout, :read_timeout=
-    # def_delegators :@config, :write_timeout, :write_timeout=
-    # def_delegators :@config, :proxy, :proxy=
-    # def_delegators :@config, :verify_ssl_certs, :verify_ssl_certs=
-    # def_delegators :@config, :ca_bundle_path, :ca_bundle_path=
-    # def_delegators :@config, :log_level, :log_level=
-    # def_delegators :@config, :max_network_retries, :max_network_retries=
-    #
-    #
-    # # Internal configurations
-    # def_delegators :@config, :initial_network_retry_delay
-    # def_delegators :@config, :max_network_retry_delay
-    # def_delegators :@config, :ca_store
-    # def initialize
-    #   @@environment = LPT::Environment.active_env
-    #   @@ca_bundle_path = LPT::DEFAULT_CA_BUNDLE_PATH
-    #   @@verify_ssl_certs = true
-    #
-    #   @@max_network_retries = 2
-    #   @@initial_network_retry_delay = 0.5
-    #   @@max_network_retry_delay = 5
-    #
-    #   @@open_timeout = 30
-    #   @@read_timeout = 80
-    #   @@write_timeout = 30
-    #
-    #   @@api_base = LPT::Environment.base_url("api")
-    #   @@cx_base = LPT::Environment.base_url("cx")
-    #   @@cx_api_base = LPT::Environment.base_url("api.cx")
-    #   @@base_addresses = {
-    #     api: @@api_base,
-    #     cx: @@cx_base,
-    #     cx_api: @@cx_api_base,
-    #   }
-    # end
-
-
-  # end
 end
