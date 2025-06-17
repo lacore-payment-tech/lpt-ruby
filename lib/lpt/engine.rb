@@ -19,35 +19,44 @@ module LPT
         ::LPT.merchant_account ||= lpt_config.fetch(:merchant_account, nil)
         ::LPT.entity ||= lpt_config.fetch(:entity, nil)
 
-        env = lpt_config.fetch(:environment, nil)
-        puts "Environment from config: #{env}"
-        if env
-          ::LPT::Environment.active_env = env
-        end
+        ::LPT.environment = lpt_config.fetch(:environment, nil)
+        env = ::LPT.environment
+        Rails.logger.info "Loading environment from config file: #{env}"
+        # if env
+        #   ::LPT::Environment.active_env = ::LPT.environment
+        # end
       end
 
-      ::LPT.ca_bundle_path = ::LPT::DEFAULT_CA_BUNDLE_PATH
-      # LPT.verify_ssl_certs = true
-
-      ::LPT.max_network_retries = 2
-      ::LPT.initial_network_retry_delay = 0.5
-      ::LPT.max_network_retry_delay = 5
-
-      ::LPT.open_timeout = 30
-      ::LPT.read_timeout = 80
-      ::LPT.write_timeout = 30
-
-      if env === 'staging'
-        ::LPT.api_base = ::LPT::Environment.base_url("staging-api-s2")
-        ::LPT.cx_base = ::LPT::Environment.base_url("cx")
-        ::LPT.cx_api_base = ::LPT::Environment.base_url("api.cx")
+      if ::LPT.environment == nil
+        Rails.logger.info "Environment not set from config file or initializer"
+      else
+        Rails.logger.info "Environment set from initializer!"
       end
 
-      ::LPT.base_addresses = {
-        api: ::LPT.api_base,
-        cx: ::LPT.cx_base,
-        cx_api: ::LPT.cx_api_base,
-      }
+      #
+      #
+      # if ::LPT.environment === 'staging'
+      #   ::LPT.api_base = ::LPT::Environment.base_url("staging-api-s2")
+      #   ::LPT.cx_base = ::LPT::Environment.base_url("cx.stg")
+      #   ::LPT.cx_api_base = ::LPT::Environment.base_url("api.cx.stg")
+      # else
+      #   ::LPT.api_base = ::LPT::Environment.base_url("api")
+      #   ::LPT.cx_base = ::LPT::Environment.base_url("cx")
+      #   ::LPT.cx_api_base = ::LPT::Environment.base_url("api.cx")
+      # end
+      #
+      # ::LPT.base_addresses = {
+      #   api: ::LPT.api_base,
+      #   cx: ::LPT.cx_base,
+      #   cx_api: ::LPT.cx_api_base,
+      # }
+      #
+      # ::LPT.client_init
+      #
+      # client = ::LPT.client
+      #
+      #
+      # Rails.logger.info LPT.base_addresses
     end
   end
 end

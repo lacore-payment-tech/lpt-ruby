@@ -1,7 +1,7 @@
 module LPT
   class ApplicationController < ActionController::Base
     def initialize
-      puts "ApplicationController initialized"
+      Rails.logger.debug "ApplicationController initialized"
     end
   end
 end

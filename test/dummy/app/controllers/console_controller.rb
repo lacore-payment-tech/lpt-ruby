@@ -8,6 +8,11 @@ class ConsoleController < ActionController::Base
   def initialize(...)
     super
 
+    configure
+    reinit
+  end
+
+  def reinit
     @merchant_ext_id = ::LPT.merchant
 
     @profile_base = {
@@ -61,6 +66,17 @@ class ConsoleController < ActionController::Base
     }
   end
 
+  def configure
+    conf = ActiveSupport::OrderedOptions.new
+    conf.environment = 'ivv'
+    conf.api_username = 'LUS9e8edc646b3543c294abec60a19687bf'
+    conf.api_password = 'qm4U3zJKXaTk7R8TZF5h6dHDmTDXKd3Y'
+    conf.merchant = 'LMR91293daf8e534132885fd90bab293c5f'
+    conf.entity = 'LEN29efb23b493640429ea2af5a31b96ef8'
+
+    ::LPT.configure(conf)
+  end
+
 
   def lpt_index
     ctrl = ::LPT::LPTController
@@ -92,7 +108,7 @@ class ConsoleController < ActionController::Base
 
     @profile_request = ::LPT::Resource::ProfileRequest.new @profile_base
 
-    profile = LPT::Resource::Profile.create(req)
+    profile = ::LPT::Resource::Profile.create(req)
 
     unless profile
       puts "Empty profile return!"
@@ -117,7 +133,7 @@ class ConsoleController < ActionController::Base
 
     puts @profile_request.as_compact_json
 
-    @profile = LPT::Resource::Profile.create @profile_request
+    @profile = ::LPT::Resource::Profile.create @profile_request
     unless @profile
       puts "POST Profile: Empty profile return!"
       return false
@@ -179,6 +195,7 @@ class ConsoleController < ActionController::Base
     end
 
     @verification_base[:subject] = @instrument_ext_id
+    @verification_base[:merchant] = @merchant_ext_id
 
     @verify_instrument_request = ::LPT::Resource::VerificationRequest.new @verification_base
 

@@ -25,7 +25,7 @@ module LPT
 
           url = self.resource_url
 
-          puts "POST #{url} -- \n#{params}"
+          Rails.logger.debug "POST #{url} -- \n#{params}"
 
           client = LPT.client
           response = client.post(url, params)
