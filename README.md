@@ -21,10 +21,17 @@ $ gem install lpt
 ## Testing & Examples
 See: `/test/dummy/app/controllers/console_controller.rb`
 
-Make sure username, password, merchant ID (merchant account ID optional), and entity ID are configured in
-`/test/dummy/app/config/lpt.yml`
+Configuration file: `/test/dummy/app/config/lpt.yml`
 
-Then start
+Make sure to adjust environment parameter and set:
+* username
+* password
+* merchant ID 
+* merchant account ID (optional)
+* entity ID
+
+
+Once complete, run:
 ```shell
 bash -c "test/dummy/bin/rails console"
 ```
