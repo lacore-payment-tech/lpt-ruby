@@ -25,7 +25,7 @@ module LPT
     BASE_DOMAINS = {
       PRODUCTION => "lacorepayments.com",
       DEMO => "dmo.lacorepayments.com",
-      STAGING => "stg.lacorepayments.com",
+      STAGING => "lacorepayments.com", ##"stg.lacorepayments.com",
       SANDBOX => "sbx.lacorepayments.com",
       NEXT => "nxt.lacorepayments.com",
       IVV => "ivv.lacorepayments.com",

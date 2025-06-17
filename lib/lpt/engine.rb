@@ -37,9 +37,12 @@ module LPT
       ::LPT.read_timeout = 80
       ::LPT.write_timeout = 30
 
-      ::LPT.api_base = ::LPT::Environment.base_url("api")
-      ::LPT.cx_base = ::LPT::Environment.base_url("cx")
-      ::LPT.cx_api_base = ::LPT::Environment.base_url("api.cx")
+      if env === 'staging'
+        ::LPT.api_base = ::LPT::Environment.base_url("staging-api-s2")
+        ::LPT.cx_base = ::LPT::Environment.base_url("cx")
+        ::LPT.cx_api_base = ::LPT::Environment.base_url("api.cx")
+      end
+
       ::LPT.base_addresses = {
         api: ::LPT.api_base,
         cx: ::LPT.cx_base,
