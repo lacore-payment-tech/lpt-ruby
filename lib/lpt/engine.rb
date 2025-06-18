@@ -25,12 +25,14 @@ module LPT
         # if env
         #   ::LPT::Environment.active_env = ::LPT.environment
         # end
+        ::LPT.client_init
       end
 
       if ::LPT.environment == nil
         Rails.logger.info "Environment not set from config file or initializer"
       else
         Rails.logger.info "Environment set from initializer!"
+        ::LPT.client_init
       end
 
       #
