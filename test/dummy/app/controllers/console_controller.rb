@@ -13,7 +13,7 @@ class ConsoleController < ActionController::Base
   end
 
   def reinit
-    @merchant_ext_id = ::LPT.merchant
+    @merchant_ext_id = LPT.merchant
 
     @profile_base = {
       name: "Testy Tester",
@@ -74,7 +74,7 @@ class ConsoleController < ActionController::Base
     conf.merchant = 'LMR91293daf8e534132885fd90bab293c5f'
     conf.entity = 'LEN29efb23b493640429ea2af5a31b96ef8'
 
-    ::LPT.configure(conf)
+    LPTClient.configure(conf)
   end
 
 

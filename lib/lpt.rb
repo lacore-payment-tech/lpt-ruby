@@ -80,80 +80,166 @@ module LPT
   mattr_reader :client, instance_reader: false, instance_accessor: false
   # @@client = nil
 
-  def self.client_init
-    @@client ||= begin
-                   options = {
-                     request: {
-                       open_timeout: @@open_timeout,
-                       read_timeout: @@read_timeout,
-                       write_timeout: @@write_timeout,
+  # def self.client_init
+  #   @@client ||= begin
+  #                  options = {
+  #                    request: {
+  #                      open_timeout: @@open_timeout,
+  #                      read_timeout: @@read_timeout,
+  #                      write_timeout: @@write_timeout,
+  #                    }
+  #                  }
+  #                  Faraday.new(url: @@api_base, **options) do |config|
+  #                    config.request :authorization, :basic, @@api_username,  @@api_password
+  #                    config.request :json
+  #                    config.response :json
+  #                    config.response :raise_error
+  #                    config.response :logger, Rails.logger, headers: true, bodies: true, log_level: :debug do |fmt|
+  #                      fmt.filter(/^(Buthorization: ).*$/i, '\1[REDACTED]')
+  #                    end
+  #                    config.adapter :net_http
+  #                  end
+  #                end
+  #
+  #   @@client
+  # end
+  #
+  # def self.client_reset
+  #   @@client = nil
+  # end
+  #
+  # # @param conf [Class<Hash>|Class<ActiveSupport::OrderedOptions>]
+  # def self.configure(conf = nil)
+  #   if conf == nil
+  #     raise("Configuration attempted with empty param hash")
+  #   end
+  #
+  #   @@ca_bundle_path = ::LPT::DEFAULT_CA_BUNDLE_PATH
+  #   # LPT.verify_ssl_certs = true
+  #
+  #   @@api_username = conf.api_username
+  #   @@api_password = conf.api_password
+  #   @@merchant = conf.merchant
+  #   @@merchant_account = conf.merchant_account
+  #   @@entity = conf.entity
+  #   @@environment = conf.environment || 'dev'
+  #
+  #   ::LPT::Environment.active_env = @@environment
+  #
+  #   @@max_network_retries = conf.max_network_retries || 2
+  #   @@initial_network_retry_delay = conf.initial_network_retry_delay || 0.5
+  #   @@max_network_retry_delay = conf.max_network_retry_delay || 5
+  #
+  #   @@open_timeout  = conf.open_timeout || 30
+  #   @@read_timeout  = conf.read_timeout || 80
+  #   @@write_timeout = conf.write_timeout || 30
+  #
+  #   if @@environment === 'staging'
+  #     @@api_base = ::LPT::Environment.base_url("staging-api-s2")
+  #     @@cx_base = ::LPT::Environment.base_url("cx.stg")
+  #     @@cx_api_base = ::LPT::Environment.base_url("api.cx.stg")
+  #   else
+  #     @@api_base = ::LPT::Environment.base_url("api")
+  #     @@cx_base = ::LPT::Environment.base_url("cx")
+  #     @@cx_api_base = ::LPT::Environment.base_url("api.cx")
+  #   end
+  #
+  #   @@base_addresses = {
+  #     api: @@api_base,
+  #     cx: @@cx_base,
+  #     cx_api: @@cx_api_base,
+  #   }
+  #
+  #   @@client = nil
+  #
+  #   self.client_init
+  #
+  #   return nil
+  # end
+
+  # def configure(conf = nil)
+  #   return LPT.configure(conf)
+  # end
+
+  # class << self
+    def configure(conf = nil)
+      if conf == nil
+        raise("Configuration attempted with empty param hash")
+      end
+
+      @@ca_bundle_path = ::LPT::DEFAULT_CA_BUNDLE_PATH
+      # LPT.verify_ssl_certs = true
+
+      @@api_username = conf.api_username
+      @@api_password = conf.api_password
+      @@merchant = conf.merchant
+      @@merchant_account = conf.merchant_account
+      @@entity = conf.entity
+      @@environment = conf.environment || 'dev'
+
+      ::LPT::Environment.active_env = @@environment
+
+      @@max_network_retries = conf.max_network_retries || 2
+      @@initial_network_retry_delay = conf.initial_network_retry_delay || 0.5
+      @@max_network_retry_delay = conf.max_network_retry_delay || 5
+
+      @@open_timeout  = conf.open_timeout || 30
+      @@read_timeout  = conf.read_timeout || 80
+      @@write_timeout = conf.write_timeout || 30
+
+      if @@environment === 'staging'
+        @@api_base = ::LPT::Environment.base_url("staging-api-s2")
+        @@cx_base = ::LPT::Environment.base_url("cx.stg")
+        @@cx_api_base = ::LPT::Environment.base_url("api.cx.stg")
+      else
+        @@api_base = ::LPT::Environment.base_url("api")
+        @@cx_base = ::LPT::Environment.base_url("cx")
+        @@cx_api_base = ::LPT::Environment.base_url("api.cx")
+      end
+
+      @@base_addresses = {
+        api: LPT::api_base,
+        cx: LPT::cx_base,
+        cx_api: LPT::cx_api_base,
+      }
+
+      @@client = nil
+
+      self.client_init
+
+      return nil
+    end
+
+    def client_init
+      @@client ||= begin
+                     options = {
+                       request: {
+                         open_timeout: @@open_timeout,
+                         read_timeout: @@read_timeout,
+                         write_timeout: @@write_timeout,
+                       }
                      }
-                   }
-                   Faraday.new(url: @@api_base, **options) do |config|
-                     config.request :authorization, :basic, @@api_username,  @@api_password
-                     config.request :json
-                     config.response :json
-                     config.response :raise_error
-                     config.response :logger, Rails.logger, headers: true, bodies: true, log_level: :debug do |fmt|
-                       fmt.filter(/^(Buthorization: ).*$/i, '\1[REDACTED]')
+                     Faraday.new(url: @@api_base, **options) do |config|
+                       config.request :authorization, :basic, @@api_username,  @@api_password
+                       config.request :json
+                       config.response :json
+                       config.response :raise_error
+                       config.response :logger, Rails.logger, headers: true, bodies: true, log_level: :debug do |fmt|
+                         fmt.filter(/^(Buthorization: ).*$/i, '\1[REDACTED]')
+                       end
+                       config.adapter :net_http
                      end
-                     config.adapter :net_http
                    end
-                 end
 
-    @@client
-  end
-
-  def self.client_reset
-    @@client = nil
-  end
-
-  # @param conf [Class<Hash>|Class<ActiveSupport::OrderedOptions>]
-  def self.configure(conf = nil)
-    if conf == nil
-      raise("Configuration attempted with empty param hash")
+      @@client
     end
 
-    @@ca_bundle_path = ::LPT::DEFAULT_CA_BUNDLE_PATH
-    # LPT.verify_ssl_certs = true
-
-    @@api_username = conf.api_username
-    @@api_password = conf.api_password
-    @@merchant = conf.merchant
-    @@merchant_account = conf.merchant_account
-    @@entity = conf.entity
-    @@environment = conf.environment || 'dev'
-
-    ::LPT::Environment.active_env = @@environment
-
-    @@max_network_retries = conf.max_network_retries || 2
-    @@initial_network_retry_delay = conf.initial_network_retry_delay || 0.5
-    @@max_network_retry_delay = conf.max_network_retry_delay || 5
-
-    @@open_timeout  = conf.open_timeout || 30
-    @@read_timeout  = conf.read_timeout || 80
-    @@write_timeout = conf.write_timeout || 30
-
-    if @@environment === 'staging'
-      @@api_base = ::LPT::Environment.base_url("staging-api-s2")
-      @@cx_base = ::LPT::Environment.base_url("cx.stg")
-      @@cx_api_base = ::LPT::Environment.base_url("api.cx.stg")
-    else
-      @@api_base = ::LPT::Environment.base_url("api")
-      @@cx_base = ::LPT::Environment.base_url("cx")
-      @@cx_api_base = ::LPT::Environment.base_url("api.cx")
+    def client_reset
+      @@client = nil
     end
+  # end
+end
 
-    @@base_addresses = {
-      api: @@api_base,
-      cx: @@cx_base,
-      cx_api: @@cx_api_base,
-    }
-
-    @@client = nil
-
-    self.client_init
-
-    return nil
-  end
+class LPTClient
+  extend LPT
 end
