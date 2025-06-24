@@ -3,13 +3,17 @@
 module Lpt
   module ApiOperations
     module Retrieve
-      def retrieve(id, opts = {})
+      def retrieve(id, _opts = {})
         client = Lpt.client
         resource = new(id: id)
         response = client.get(resource.resource_path)
-        if response.body
-          new(response.body)
-        end
+        parse_response(response.body)
+      end
+
+      def parse_response(body)
+        return unless body
+
+        new(body)
       end
     end
   end

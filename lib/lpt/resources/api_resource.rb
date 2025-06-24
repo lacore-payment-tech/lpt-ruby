@@ -17,7 +17,7 @@ module Lpt
         "/v2"
       end
 
-      def base_resource_path
+      def resources_path
         assert_concrete_class_used!
         # Namespaces are separated in object names with periods (.) and in URLs
         # with forward slashes (/), so replace the former with the latter.

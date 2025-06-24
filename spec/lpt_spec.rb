@@ -4,7 +4,7 @@ require "spec_helper"
 
 RSpec.describe Lpt do
   it "has a version number" do
-    expect(Lpt::VERSION).not_to be nil
+    expect(Lpt::VERSION).not_to be_nil
   end
 
   describe "#client" do
@@ -61,7 +61,7 @@ RSpec.describe Lpt do
       end
     end
 
-    context "when the merchant is invalid" do
+    context "when the entity is invalid" do
       it "raises an error" do
         configure_client entity: "XXXABV"
 
@@ -82,6 +82,7 @@ RSpec.describe Lpt do
         expect(Lpt.environment).to eq(Lpt::Environment::PRODUCTION)
       end
     end
+
     context "when the environment is an invalid integer" do
       it "raises an error" do
         env = 66

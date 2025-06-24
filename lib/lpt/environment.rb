@@ -19,19 +19,19 @@ module Lpt
       "next" => NEXT,
       "ivv" => IVV,
       "test" => TEST,
-      "dev" => DEV,
-    }
+      "dev" => DEV
+    }.freeze
 
     BASE_DOMAINS = {
       PRODUCTION => "lacorepayments.com",
       DEMO => "dmo.lacorepayments.com",
-      STAGING => "lacorepayments.com", # "stg.lacorepayments.com",
+      STAGING => "lacorepayments.com",
       SANDBOX => "sbx.lacorepayments.com",
       NEXT => "nxt.lacorepayments.com",
       IVV => "ivv.lacorepayments.com",
       TEST => "test.lpt.local",
-      DEV => "lpt.local" # "dev.lacorepayments.com",
-    }
+      DEV => "lpt.local"
+    }.freeze
 
     attr_accessor :api_base, :cx_base, :cx_api_base, :base_domain
 
@@ -42,9 +42,9 @@ module Lpt
       @base_domain = base_domain
     end
 
-    def ==(env)
-      api_base == env.api_base && base_domain == env.base_domain &&
-        cx_base == env.cx_base && cx_api_base == env.cx_api_base
+    def ==(other)
+      api_base == other.api_base && base_domain == other.base_domain &&
+        cx_base == other.cx_base && cx_api_base == other.cx_api_base
     end
 
     def api_base_url

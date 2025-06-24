@@ -27,8 +27,8 @@ module Lpt
   LEVEL_ERROR = Logger::ERROR
   LEVEL_INFO = Logger::INFO
 
-  ENTITY_PREFIX = "LEN".freeze
-  MERCHANT_PREFIX = "LMR".freeze
+  ENTITY_PREFIX = "LEN"
+  MERCHANT_PREFIX = "LMR"
 
   class << self
     attr_accessor :api_username, :api_password, :merchant, :merchant_account,
@@ -107,25 +107,21 @@ module Lpt
 
     def assert_username!
       msg = "Invalid API Username: #{api_username}"
-
       raise ArgumentError, msg if api_username.blank?
     end
 
     def assert_password!
       msg = "Invalid API Password"
-
       raise ArgumentError, msg if api_password.blank?
     end
 
     def assert_merchant!
       msg = "Invalid Merchant: #{merchant}"
-
       raise ArgumentError, msg unless merchant.start_with? MERCHANT_PREFIX
     end
 
     def assert_entity!
       msg = "Invalid Entity: #{entity}"
-
       raise ArgumentError, msg unless entity.start_with? ENTITY_PREFIX
     end
 

@@ -8,18 +8,26 @@ module Lpt
 
     class << self
       def factory(environment:)
-        request_options = { open_timeout: Lpt.open_timeout,
-                            read_timeout: Lpt.read_timeout,
-                            write_timeout: Lpt.write_timeout }
         options = { request: request_options }
-        logging_options = { headers: true, bodies: true,
-                            log_level: Lpt.log_level }
-        username = Lpt.api_username
-        password = Lpt.api_password
+        client = initialize_client(api_base_url: environment.api_base_url,
+                                   options: options)
+        new(api_client: client)
+      end
 
-        client = Faraday.
-                 new(url: environment.api_base_url, **options) do |config|
-          config.request :authorization, :basic, username, password
+      protected
+
+      def request_options
+        { open_timeout: Lpt.open_timeout, read_timeout: Lpt.read_timeout,
+          write_timeout: Lpt.write_timeout }
+      end
+
+      def logging_options
+        { headers: true, bodies: true, log_level: Lpt.log_level }
+      end
+
+      def initialize_client(api_base_url:, options:)
+        Faraday.new(url: api_base_url, **options) do |config|
+          config.request :authorization, :basic, Lpt.api_username, Lpt.api_password
           config.request :json
           config.response :json
           config.response :raise_error
@@ -28,8 +36,6 @@ module Lpt
           end
           config.adapter :net_http
         end
-
-        new(api_client: client)
       end
     end
   end
