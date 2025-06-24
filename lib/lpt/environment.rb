@@ -65,12 +65,7 @@ module Lpt
 
       def factory(environment: DEV)
         args = base_addresses(environment: environment)
-        puts "-- factory"
-        puts args.inspect
-        puts BASE_DOMAINS.inspect
-        puts environment
         args[:base_domain] = BASE_DOMAINS[environment]
-        puts args.inspect
         new(**args)
       end
 

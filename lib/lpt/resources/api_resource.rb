@@ -11,23 +11,37 @@ module Lpt
       end
 
       def base_resource_path
-        #if self == APIResource
-        #  raise ::NotImplementedError,
-        #        "APIResource is an abstract class. You should perform actions on its subclasses (Payment, Instrument, etc.)"
-        #end
+        assert_concrete_class_used!
         # Namespaces are separated in object names with periods (.) and in URLs
         # with forward slashes (/), so replace the former with the latter.
         "#{base_path}/#{object_name.downcase.tr('.', '/')}s"
       end
 
       def resource_path
-        #unless id
-        #  raise ::InvalidRequestError.new(
-        #    "Could not determine which URL to request: #{self.class} instance has invalid ID: #{id.inspect}",
-        #    "id"
-        #  )
-        #end
+        assert_valid_id_exists!
         "#{base_resource_path}/#{CGI.escape(id)}"
+      end
+
+      protected
+
+      def assert_concrete_class_used!
+        return unless self == ApiResource
+
+        msg = <<~MSG
+          APIResource is an abstract class. You should perform actions on its
+          subclasses (Payment, Instrument, etc.)
+        MSG
+        raise NotImplementedError, msg
+      end
+
+      def assert_valid_id_exists!
+        return if id
+
+        msg = <<~MSG
+          Could not determine which URL to request: #{self.class} instance has
+          an invalid ID: #{id.inspect}
+        MSG
+        raise InvalidRequestError, msg
       end
     end
   end

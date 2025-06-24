@@ -13,6 +13,8 @@ require_relative "lpt/api_operations/retrieve"
 require_relative "lpt/resources/api_resource"
 require_relative "lpt/resources/profile"
 
+require_relative "lpt/requests/profile_request"
+
 module Lpt
   class Error < StandardError; end
 
@@ -24,9 +26,7 @@ module Lpt
 
   class << self
     attr_accessor :api_username, :api_password, :merchant, :merchant_account,
-                  :entity
-
-    attr_accessor :proxy, :ca_store
+                  :entity, :proxy, :ca_store
 
     attr_writer :environment, :open_timeout, :read_timeout, :write_timeout,
                 :max_network_retries, :initial_network_retry_delay,
