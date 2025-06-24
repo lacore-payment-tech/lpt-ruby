@@ -240,6 +240,3 @@ module LPT
   # end
 end
 
-class LPTClient
-  extend LPT
-end

@@ -1,3 +1,5 @@
+require "lpt_client"
+
 class ConsoleController < ActionController::Base
   attr_accessor :profile_ext_id, :profile
   attr_accessor :instrument_ext_id, :instrument

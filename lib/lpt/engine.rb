@@ -2,7 +2,7 @@
 
 module LPT
   class Engine < ::Rails::Engine
-    # isolate_namespace LPT
+    isolate_namespace LPT
     paths["app/models"] << "app/resources"
 
     config.after_initialize do
