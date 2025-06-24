@@ -1,10 +1,11 @@
 # frozen_string_literal: true
 
+require "faraday"
+require "logger"
+
 require_relative "lpt/version"
 require_relative "lpt/environment"
 require_relative "lpt/lpt_client"
-
-require "logger"
 
 module Lpt
   class Error < StandardError; end
