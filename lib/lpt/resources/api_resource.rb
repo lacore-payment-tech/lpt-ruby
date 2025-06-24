@@ -3,7 +3,14 @@
 module Lpt
   module Resources
     class ApiResource
-      attr_accessor :id, :created, :updated, :status
+      attr_accessor :id, :created, :updated, :status, :created_at, :updated_at
+
+      def initialize(attributes = {})
+        attributes.each_pair do |k, v|
+          setter = :"#{k}="
+          public_send(setter, v)
+        end
+      end
 
       def base_path
         # TODO: move into config

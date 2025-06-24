@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Lpt
-  class LptClient < SimpleDelegator
+  class LptClient < ::SimpleDelegator
     def initialize(api_client:)
       super(api_client)
     end

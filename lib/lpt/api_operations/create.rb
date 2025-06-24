@@ -5,12 +5,10 @@ module Lpt
     module Create
       def create(request, opts = {})
         client = Lpt.client
-        response = client.post(self.resource_path, request.to_json)
+        resource = new
+        response = client.post(resource.base_resource_path, request.to_json)
         if response.body
-          puts "-- RESPONSE"
-          puts response.body.inspect
-          resource = self.new(response.body)
-          resource
+          new(response.body)
         end
       end
     end

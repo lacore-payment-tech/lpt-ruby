@@ -8,12 +8,8 @@ module Lpt
       extend Lpt::ApiOperations::Retrieve
       extend Lpt::ApiOperations::Create
 
-      attr_accessor :id, :entity, :metadata, :profile_id, :reference_id, :name,
+      attr_accessor :entity, :metadata, :profile_id, :reference_id, :name,
                     :contact, :address
-
-      def initialize(id:)
-        @id = id
-      end
 
       def object_name
         OBJECT_NAME
