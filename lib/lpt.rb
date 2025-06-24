@@ -15,6 +15,7 @@ require_relative "lpt/api_operations/retrieve"
 require_relative "lpt/resources/api_resource"
 require_relative "lpt/resources/profile"
 
+require_relative "lpt/requests/api_request"
 require_relative "lpt/requests/profile_request"
 
 module Lpt
@@ -30,10 +31,16 @@ module Lpt
     attr_accessor :api_username, :api_password, :merchant, :merchant_account,
                   :entity, :proxy, :ca_store
 
-    attr_writer :environment, :open_timeout, :read_timeout, :write_timeout,
+    attr_writer :open_timeout, :read_timeout, :write_timeout,
                 :max_network_retries, :initial_network_retry_delay,
                 :max_network_retry_delay, :verify_ssl_certs, :ca_bundle_path,
                 :log_level
+
+    def environment=(environment)
+      standard_env = standardize_environment(environment)
+      assert_environment_is_valid! standard_env
+      @environment = standard_env
+    end
 
     def environment
       @environment || Lpt::Environment::DEV
@@ -79,6 +86,23 @@ module Lpt
       # TODO: validate configuration
       env = Lpt::Environment.factory(environment: environment)
       Lpt::LptClient.factory(environment: env)
+    end
+
+    protected
+
+    def assert_environment_is_valid!(env)
+      msg = "Invalid Environment: #{env}"
+      raise ArgumentError, msg unless envs.include?(env)
+    end
+
+    def standardize_environment(env)
+      return env if env.is_a? Integer
+
+      Lpt::Environment::ENVIRONMENTS[env]
+    end
+
+    def envs
+      Lpt::Environment::ENVIRONMENTS.values
     end
   end
 end
