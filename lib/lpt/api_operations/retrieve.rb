@@ -8,8 +8,7 @@ module Lpt
         resource = new(id: id)
         response = client.get(resource.resource_path)
         if response.body
-          resource.attributes = response.body
-          resource
+          new(response.body)
         end
       end
     end
