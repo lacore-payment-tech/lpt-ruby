@@ -7,6 +7,12 @@ require_relative "lpt/version"
 require_relative "lpt/environment"
 require_relative "lpt/lpt_client"
 
+require_relative "lpt/api_operations/create"
+require_relative "lpt/api_operations/retrieve"
+
+require_relative "lpt/resources/api_resource"
+require_relative "lpt/resources/profile"
+
 module Lpt
   class Error < StandardError; end
 
@@ -20,12 +26,16 @@ module Lpt
     attr_accessor :api_username, :api_password, :merchant, :merchant_account,
                   :entity
 
-    attr_accessor :environment, :logger, :proxy, :ca_store
+    attr_accessor :proxy, :ca_store
 
-    attr_writer :open_timeout, :read_timeout, :write_timeout,
+    attr_writer :environment, :open_timeout, :read_timeout, :write_timeout,
                 :max_network_retries, :initial_network_retry_delay,
                 :max_network_retry_delay, :verify_ssl_certs, :ca_bundle_path,
                 :log_level
+
+    def environment
+      @environment || Lpt::Environment::DEV
+    end
 
     def open_timeout
       @open_timeout || 30
@@ -61,6 +71,12 @@ module Lpt
 
     def log_level
       @log_level || LEVEL_DEBUG
+    end
+
+    def client
+      # TODO: validate configuration
+      env = Lpt::Environment.factory(environment: environment)
+      Lpt::LptClient.factory(environment: env)
     end
   end
 end

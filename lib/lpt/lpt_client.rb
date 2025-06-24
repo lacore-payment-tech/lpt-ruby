@@ -1,13 +1,13 @@
 # frozen_string_literal: true
 
 module Lpt
-  class LptClient
+  class LptClient < SimpleDelegator
     def initialize(api_client:)
-      @api_client = api_client
+      super(api_client)
     end
 
     class << self
-      def factory(env:)
+      def factory(environment:)
         request_options = { open_timeout: Lpt.open_timeout,
                             read_timeout: Lpt.read_timeout,
                             write_timeout: Lpt.write_timeout }
@@ -17,7 +17,8 @@ module Lpt
         username = Lpt.api_username
         password = Lpt.api_password
 
-        client = Faraday.new(url: env.api_base_url, **options) do |config|
+        client = Faraday.
+                 new(url: environment.api_base_url, **options) do |config|
           config.request :authorization, :basic, username, password
           config.request :json
           config.response :json

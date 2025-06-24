@@ -33,9 +33,6 @@ module Lpt
       DEV => "lpt.local" # "dev.lacorepayments.com",
     }
 
-    #cattr_accessor :ngrok, instance_accessor: false
-    #cattr_accessor :active_env, instance_accessor: false
-
     attr_accessor :api_base, :cx_base, :cx_api_base, :base_domain
 
     def initialize(api_base:, cx_base:, cx_api_base:, base_domain:)
@@ -68,7 +65,12 @@ module Lpt
 
       def factory(environment: DEV)
         args = base_addresses(environment: environment)
+        puts "-- factory"
+        puts args.inspect
+        puts BASE_DOMAINS.inspect
+        puts environment
         args[:base_domain] = BASE_DOMAINS[environment]
+        puts args.inspect
         new(**args)
       end
 
