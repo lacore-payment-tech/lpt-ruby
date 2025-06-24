@@ -42,6 +42,11 @@ module Lpt
       @base_domain = base_domain
     end
 
+    def ==(env)
+      api_base == env.api_base && base_domain == env.base_domain &&
+        cx_base == env.cx_base && cx_api_base == env.cx_api_base
+    end
+
     def api_base_url
       base_url(api_base)
     end
