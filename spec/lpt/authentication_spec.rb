@@ -67,12 +67,4 @@ RSpec.describe Lpt::Authentication do
       end
     end
   end
-
-  def configure_client(username: "test", password: "test", merchant: "LMR123",
-                       entity: "LEN123")
-    Lpt.api_username = username
-    Lpt.api_password = password
-    Lpt.merchant = merchant
-    Lpt.entity = entity
-  end
 end

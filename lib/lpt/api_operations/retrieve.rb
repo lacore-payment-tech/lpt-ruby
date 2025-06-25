@@ -7,13 +7,7 @@ module Lpt
         client = Lpt.client
         resource = new(id: id)
         response = client.get(resource.resource_path)
-        parse_response(response.body)
-      end
-
-      def parse_response(body)
-        return unless body
-
-        new(body)
+        new(response.body)
       end
     end
   end

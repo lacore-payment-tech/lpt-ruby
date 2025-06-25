@@ -7,13 +7,7 @@ module Lpt
         client = Lpt.client
         resource = new
         response = client.post(resource.resources_path, request.to_json)
-        parse_response(response.body)
-      end
-
-      def parse_response(body)
-        return unless body
-
-        new(body)
+        new(response.body)
       end
     end
   end

@@ -31,9 +31,6 @@ module Lpt
           config.request :json
           config.response :json
           config.response :raise_error
-          config.response :logger, nil, **logging_options do |fmt|
-            fmt.filter(/^(Buthorization: ).*$/i, '\1[REDACTED]')
-          end
           config.adapter :net_http
         end
       end

@@ -1,6 +1,10 @@
 # frozen_string_literal: true
 
+require "webmock/rspec"
+
 require "lpt"
+
+Dir["./spec/support/**/*.rb"].sort.each { |f| require f }
 
 RSpec.configure do |config|
   # Enable flags like --only-failures and --next-failure
@@ -12,4 +16,7 @@ RSpec.configure do |config|
   config.expect_with :rspec do |c|
     c.syntax = :expect
   end
+
+  config.include ClientHelper
+  config.include ProfileHelper
 end
