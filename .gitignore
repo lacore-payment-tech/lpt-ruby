@@ -1,0 +1,9 @@
+/lpt-*.gem
+.rvmrc
+Gemfile.lock
+tags
+/.bundle/
+coverage/
+.idea/
+.ruby-version
+.rspec_status
