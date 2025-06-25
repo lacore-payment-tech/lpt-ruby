@@ -7,67 +7,28 @@ RSpec.describe Lpt do
     expect(Lpt::VERSION).not_to be_nil
   end
 
-  describe "#client" do
-    it "instantiates the environment" do
-      configure_client
-      allow(Lpt::Environment).to receive(:factory).and_call_original
-      Lpt.environment = Lpt::Environment::STAGING
+  describe "#base_addresses" do
+    context "when the environment is staging" do
+      it "returns the staging base addresses" do
+        staging_env = Lpt::Environment::STAGING
+        staging_base = { api_base: "staging-api-s2", cx_base: "cx.stg",
+                         cx_api_base: "api.cx.stg" }
 
-      Lpt.client
+        result = Lpt.base_addresses(environment: staging_env)
 
-      expect(Lpt::Environment).to have_received(:factory).once.
-        with(environment: Lpt::Environment::STAGING)
-    end
-
-    it "instantiates the LPT client" do
-      configure_client
-      allow(Lpt::LptClient).to receive(:factory).and_call_original
-      environment = Lpt::Environment.staging
-      Lpt.environment = Lpt::Environment::STAGING
-
-      Lpt.client
-
-      expect(Lpt::LptClient).to have_received(:factory).once.
-        with(environment: environment)
-    end
-
-    context "when the username is not set" do
-      it "raises an error" do
-        configure_client username: ""
-
-        expect {
-          Lpt.client
-        }.to raise_error(ArgumentError)
+        expect(result).to eq(staging_base)
       end
     end
 
-    context "when the password is not set" do
-      it "raises an error" do
-        configure_client password: ""
+    context "when the environment is not staging" do
+      it "returns the non-staging base addresses" do
+        prod_env = Lpt::Environment::PRODUCTION
+        non_staging_base = { api_base: "api", cx_base: "cx",
+                             cx_api_base: "api.cx" }
 
-        expect {
-          Lpt.client
-        }.to raise_error(ArgumentError)
-      end
-    end
+        result = Lpt.base_addresses(environment: prod_env)
 
-    context "when the merchant is invalid" do
-      it "raises an error" do
-        configure_client merchant: "XXXMR123"
-
-        expect {
-          Lpt.client
-        }.to raise_error(ArgumentError)
-      end
-    end
-
-    context "when the entity is invalid" do
-      it "raises an error" do
-        configure_client entity: "XXXABV"
-
-        expect {
-          Lpt.client
-        }.to raise_error(ArgumentError)
+        expect(result).to eq(non_staging_base)
       end
     end
   end
@@ -112,13 +73,5 @@ RSpec.describe Lpt do
         }.to raise_error(ArgumentError)
       end
     end
-  end
-
-  def configure_client(username: "test", password: "test", merchant: "LMR123",
-                       entity: "LEN123")
-    Lpt.api_username = username
-    Lpt.api_password = password
-    Lpt.merchant = merchant
-    Lpt.entity = entity
   end
 end
