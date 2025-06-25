@@ -1,3 +1,5 @@
-module LPT
-  VERSION = "2.0.0"
+# frozen_string_literal: true
+
+module Lpt
+  VERSION = "0.1.0"
 end

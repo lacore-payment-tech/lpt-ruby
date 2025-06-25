@@ -1,18 +1,16 @@
-source "https://rubygems.org"
-git_source(:github) { |repo| "https://github.com/#{repo}.git" }
+# frozen_string_literal: true
 
-# Specify your gem's dependencies in lpt.gemspec.
+source "https://rubygems.org"
+
+# Specify your gem's dependencies in lpt-ruby.gemspec
 gemspec
 
-gem "puma"
-
-gem "pg"
-
-gem "sprockets-rails"
-
-gem "faraday"
-# Start debugger with binding.b [https://github.com/ruby/debug]
-gem "debug", ">= 1.0.0"
-
-## required for fixing rails 7.0.8.1 issues, especially outside of tree
-gem "concurrent-ruby", "<=1.3.4"
+group :test, :development do
+  gem "rake", "~> 13.0"
+  gem "rspec", "~> 3.0"
+  gem "rubocop", "~> 1.21"
+  gem "rubocop-performance"
+  gem "rubocop-rake"
+  gem "rubocop-rspec"
+  gem "webmock"
+end

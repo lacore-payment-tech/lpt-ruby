@@ -1,57 +1,60 @@
 # LPT
-Ruby API Client
+
+A Ruby client for interacting with the [LPT API](https://lpt.io)
 
 ## Installation
-Add this line to your application's Gemfile:
 
-```ruby
-gem "lpt"
-```
+Install the gem and add to the application's Gemfile by executing:
 
-And then execute:
-```bash
-$ bundle
-```
+    $ bundle add lpt-ruby
 
-Or install it yourself as:
-```bash
-$ gem install lpt
-```
+If bundler is not being used to manage dependencies, install the gem by executing:
 
-## Testing & Examples
-See: `/test/dummy/app/controllers/console_controller.rb`
+    $ gem install lpt-ruby
 
-Configuration file: `/test/dummy/app/config/lpt.yml`
+## Usage
 
-Make sure to adjust environment parameter and set:
-* username
-* password
-* merchant ID 
-* merchant account ID (optional)
-* entity ID
+Configure the LPT Client
 
+    Lpt.api_username = "LUSXXXXXXXXXXXXXXXXX"
+    Lpt.api_password = "XXXXXXXXXXXXXXXXXXXX"
+    Lpt.merchant = "LMRXXXXXXXXXXXXXXXXXXXX"
+    Lpt.entity = "LENXXXXXXXXXXXXXXXXXXXX"
+    Lpt.environment = Lpt::Environment::STAGING
 
-Once complete, run:
-```shell
-bash -c "test/dummy/bin/rails console"
-```
+The available environments are
 
-Run payment actions:
-```ruby
-ctrl = ConsoleController.new
+    Lpt::Environment::PRODUCTION
+    Lpt::Environment::DEMO
+    Lpt::Environment::STAGING
+    Lpt::Environment::SANDBOX
+    Lpt::Environment::NEXT
+    Lpt::Environment::IVV
+    Lpt::Environment::TEST
+    Lpt::Environment::DEV
 
-ctrl.post_profile ## create profile
-ctrl.post_instrument_token ## create token (simulates hosted fields)
-ctrl.post_instrument_register_token ## associate token & profile, get LPI ID
-ctrl.post_verify_instrument ## run verification on token
-ctrl.post_payment ## authorize payment
-ctrl.post_payment_reversal ## reverse authorization
+## Development
 
-ctrl.post_instrument ## create instrument directly
-ctrl.post_payment ## authorize a new payment with the new instrument
-ctrl.post_payment_capture ## capture this payment
-ctrl.post_payment_refund ## now refund the payment
+After checking out the repo, run `bin/setup` to install dependencies. Then, run
+`bundle exec rake` to run the tests and linting. You can also run `bin/console`
+for an interactive prompt that will allow you to experiment.
 
-## run all the steps above in one shot
-ctrl.run_payments
-```
+To install this gem onto your local machine, run `bundle exec rake install`. To
+release a new version, update the version number in `version.rb`, and then run
+`bundle exec rake release`, which will create a git tag for the version, push
+git commits and the created tag, and push the `.gem` file to [rubygems.org](https://rubygems.org).
+
+## Contributing
+
+Bug reports and pull requests are welcome on GitHub at https://github.com/lacore-payment-tech/lpt-ruby.
+This project is intended to be a safe, welcoming space for collaboration, and
+contributors are expected to adhere to the [code of conduct](https://github.com/lacore-payment-tech/lpt-ruby/blob/main/CODE_OF_CONDUCT.md).
+
+## License
+
+The gem is available as open source under the terms of the [MIT License](https://opensource.org/licenses/MIT).
+
+## Code of Conduct
+
+Everyone interacting in the Lpt::Ruby project's codebases, issue trackers, chat
+rooms and mailing lists is expected to follow the [code of conduct](https://github.com/lacore-payment-tech/lpt-ruby/blob/main/CODE_OF_CONDUCT.md).

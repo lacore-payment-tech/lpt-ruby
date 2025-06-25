@@ -1,242 +1,119 @@
 # frozen_string_literal: true
-require "lpt/version"
-require "lpt/environment"
-require "lpt/engine"
 
-module LPT
-  DEFAULT_CA_BUNDLE_PATH = __dir__ + "/data/ca-certificates.crt"
+require "active_support/all"
+require "delegate"
+require "faraday"
+require "logger"
 
-  # map to the same values as the standard library's logger
+require_relative "lpt/authentication"
+require_relative "lpt/version"
+require_relative "lpt/environment"
+require_relative "lpt/lpt_client"
+
+require_relative "lpt/api_operations/create"
+require_relative "lpt/api_operations/retrieve"
+
+require_relative "lpt/resources/api_resource"
+require_relative "lpt/resources/profile"
+
+require_relative "lpt/requests/api_request"
+require_relative "lpt/requests/profile_request"
+
+module Lpt
+  class Error < StandardError; end
+
+  DEFAULT_CA_BUNDLE_PATH = "#{__dir__}/data/ca-certificates.crt"
+
   LEVEL_DEBUG = Logger::DEBUG
   LEVEL_ERROR = Logger::ERROR
   LEVEL_INFO = Logger::INFO
 
-  mattr_accessor :api_username
-  # @@api_username = nil
+  PREFIX_ENTITY = "LEN"
+  PREFIX_MERCHANT = "LMR"
+  PREFIX_PROFILE = "LID"
 
-  mattr_accessor :api_password
-  # @@api_password = nil
+  class << self
+    include Lpt::Authentication
 
-  mattr_accessor :entity
-  # @@entity = nil
+    attr_writer :open_timeout, :read_timeout, :write_timeout,
+                :max_network_retries, :initial_network_retry_delay,
+                :max_network_retry_delay, :verify_ssl_certs, :ca_bundle_path,
+                :log_level
 
-  mattr_accessor :merchant
-  # @@merchant = nil
+    def environment=(environment)
+      standard_env = standardize_environment(environment)
+      assert_environment_is_valid! standard_env
+      @environment = standard_env
+    end
 
-  mattr_accessor :merchant_account
-  # @@merchant_account = nil
+    def environment
+      @environment || Lpt::Environment::DEV
+    end
 
+    def api_version
+      "v2"
+    end
 
-  mattr_accessor :environment
-  # @@environment = nil
-
-  mattr_accessor :logger
-  # @@logger = nil
-
-  mattr_accessor :api_base
-  # @@api_base = nil
-
-  mattr_accessor :cx_base
-  # @@cx_base = nil
-
-  mattr_accessor :cx_api_base
-  # @@cx_api_base = nil
-
-  mattr_accessor :base_addresses, default: { }
-  # @@base_addresses = { }
-
-  mattr_accessor :open_timeout, default: 30
-  # @@open_timeout = 30
-
-  mattr_accessor :read_timeout, default: 80
-  # @@read_timeout = 80
-
-  mattr_accessor :write_timeout, default: 30
-  # @@write_timeout = 30
-
-  mattr_accessor :max_network_retries, default: 2
-  # @@max_network_retries = 2
-
-  mattr_accessor :initial_network_retry_delay, default: 0.5
-  # @@initial_network_retry_delay = 0.5
-
-  mattr_accessor :max_network_retry_delay, default: 5
-  # @@max_network_retry_delay = 5
-
-  mattr_accessor :proxy
-  # @@proxy = nil
-
-  mattr_accessor :verify_ssl_certs, default: true
-  # @@verify_ssl_certs = true
-
-  mattr_accessor :ca_bundle_path
-  @@ca_bundle_path = DEFAULT_CA_BUNDLE_PATH
-
-  mattr_accessor :log_level
-  @@log_level = LEVEL_DEBUG
-
-  mattr_accessor :ca_store
-
-  mattr_reader :client, instance_reader: false, instance_accessor: false
-  # @@client = nil
-
-  # def self.client_init
-  #   @@client ||= begin
-  #                  options = {
-  #                    request: {
-  #                      open_timeout: @@open_timeout,
-  #                      read_timeout: @@read_timeout,
-  #                      write_timeout: @@write_timeout,
-  #                    }
-  #                  }
-  #                  Faraday.new(url: @@api_base, **options) do |config|
-  #                    config.request :authorization, :basic, @@api_username,  @@api_password
-  #                    config.request :json
-  #                    config.response :json
-  #                    config.response :raise_error
-  #                    config.response :logger, Rails.logger, headers: true, bodies: true, log_level: :debug do |fmt|
-  #                      fmt.filter(/^(Buthorization: ).*$/i, '\1[REDACTED]')
-  #                    end
-  #                    config.adapter :net_http
-  #                  end
-  #                end
-  #
-  #   @@client
-  # end
-  #
-  # def self.client_reset
-  #   @@client = nil
-  # end
-  #
-  # # @param conf [Class<Hash>|Class<ActiveSupport::OrderedOptions>]
-  # def self.configure(conf = nil)
-  #   if conf == nil
-  #     raise("Configuration attempted with empty param hash")
-  #   end
-  #
-  #   @@ca_bundle_path = ::LPT::DEFAULT_CA_BUNDLE_PATH
-  #   # LPT.verify_ssl_certs = true
-  #
-  #   @@api_username = conf.api_username
-  #   @@api_password = conf.api_password
-  #   @@merchant = conf.merchant
-  #   @@merchant_account = conf.merchant_account
-  #   @@entity = conf.entity
-  #   @@environment = conf.environment || 'dev'
-  #
-  #   ::LPT::Environment.active_env = @@environment
-  #
-  #   @@max_network_retries = conf.max_network_retries || 2
-  #   @@initial_network_retry_delay = conf.initial_network_retry_delay || 0.5
-  #   @@max_network_retry_delay = conf.max_network_retry_delay || 5
-  #
-  #   @@open_timeout  = conf.open_timeout || 30
-  #   @@read_timeout  = conf.read_timeout || 80
-  #   @@write_timeout = conf.write_timeout || 30
-  #
-  #   if @@environment === 'staging'
-  #     @@api_base = ::LPT::Environment.base_url("staging-api-s2")
-  #     @@cx_base = ::LPT::Environment.base_url("cx.stg")
-  #     @@cx_api_base = ::LPT::Environment.base_url("api.cx.stg")
-  #   else
-  #     @@api_base = ::LPT::Environment.base_url("api")
-  #     @@cx_base = ::LPT::Environment.base_url("cx")
-  #     @@cx_api_base = ::LPT::Environment.base_url("api.cx")
-  #   end
-  #
-  #   @@base_addresses = {
-  #     api: @@api_base,
-  #     cx: @@cx_base,
-  #     cx_api: @@cx_api_base,
-  #   }
-  #
-  #   @@client = nil
-  #
-  #   self.client_init
-  #
-  #   return nil
-  # end
-
-  # def configure(conf = nil)
-  #   return LPT.configure(conf)
-  # end
-
-  # class << self
-    def configure(conf = nil)
-      if conf == nil
-        raise("Configuration attempted with empty param hash")
-      end
-
-      @@ca_bundle_path = ::LPT::DEFAULT_CA_BUNDLE_PATH
-      # LPT.verify_ssl_certs = true
-
-      @@api_username = conf.api_username
-      @@api_password = conf.api_password
-      @@merchant = conf.merchant
-      @@merchant_account = conf.merchant_account
-      @@entity = conf.entity
-      @@environment = conf.environment || 'dev'
-
-      ::LPT::Environment.active_env = @@environment
-
-      @@max_network_retries = conf.max_network_retries || 2
-      @@initial_network_retry_delay = conf.initial_network_retry_delay || 0.5
-      @@max_network_retry_delay = conf.max_network_retry_delay || 5
-
-      @@open_timeout  = conf.open_timeout || 30
-      @@read_timeout  = conf.read_timeout || 80
-      @@write_timeout = conf.write_timeout || 30
-
-      if @@environment === 'staging'
-        @@api_base = ::LPT::Environment.base_url("staging-api-s2")
-        @@cx_base = ::LPT::Environment.base_url("cx.stg")
-        @@cx_api_base = ::LPT::Environment.base_url("api.cx.stg")
+    def base_addresses(environment: nil)
+      if environment == Lpt::Environment::STAGING
+        { api_base: "staging-api-s2", cx_base: "cx.stg",
+          cx_api_base: "api.cx.stg" }
       else
-        @@api_base = ::LPT::Environment.base_url("api")
-        @@cx_base = ::LPT::Environment.base_url("cx")
-        @@cx_api_base = ::LPT::Environment.base_url("api.cx")
+        { api_base: "api", cx_base: "cx", cx_api_base: "api.cx" }
       end
-
-      @@base_addresses = {
-        api: LPT::api_base,
-        cx: LPT::cx_base,
-        cx_api: LPT::cx_api_base,
-      }
-
-      @@client = nil
-
-      self.client_init
-
-      return nil
     end
 
-    def client_init
-      @@client ||= begin
-                     options = {
-                       request: {
-                         open_timeout: @@open_timeout,
-                         read_timeout: @@read_timeout,
-                         write_timeout: @@write_timeout,
-                       }
-                     }
-                     Faraday.new(url: @@api_base, **options) do |config|
-                       config.request :authorization, :basic, @@api_username,  @@api_password
-                       config.request :json
-                       config.response :json
-                       config.response :raise_error
-                       config.response :logger, Rails.logger, headers: true, bodies: true, log_level: :debug do |fmt|
-                         fmt.filter(/^(Buthorization: ).*$/i, '\1[REDACTED]')
-                       end
-                       config.adapter :net_http
-                     end
-                   end
-
-      @@client
+    def open_timeout
+      @open_timeout || 30
     end
 
-    def client_reset
-      @@client = nil
+    def read_timeout
+      @read_timeout || 80
     end
-  # end
+
+    def write_timeout
+      @write_timeout || 30
+    end
+
+    def max_network_retries
+      @max_network_retries || 2
+    end
+
+    def initial_network_retry_delay
+      @initial_network_retry_delay || 0.5
+    end
+
+    def max_network_retry_delay
+      @max_network_retry_delay || 5
+    end
+
+    def verify_ssl_certs
+      @verify_ssl_certs || true
+    end
+
+    def ca_bundle_path
+      @ca_bundle_path || DEFAULT_CA_BUNDLE_PATH
+    end
+
+    def log_level
+      @log_level || LEVEL_DEBUG
+    end
+
+    protected
+
+    def assert_environment_is_valid!(env)
+      msg = "Invalid Environment: #{env}"
+      raise ArgumentError, msg unless envs.include?(env)
+    end
+
+    def standardize_environment(env)
+      return env if env.is_a? Integer
+
+      Lpt::Environment::ENVIRONMENTS[env]
+    end
+
+    def envs
+      Lpt::Environment::ENVIRONMENTS.values
+    end
+  end
 end
-

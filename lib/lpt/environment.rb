@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module LPT
+module Lpt
   class Environment
     PRODUCTION = 90
     DEMO = 80
@@ -19,68 +19,66 @@ module LPT
       "next" => NEXT,
       "ivv" => IVV,
       "test" => TEST,
-      "dev" => DEV,
-    }
+      "dev" => DEV
+    }.freeze
 
     BASE_DOMAINS = {
       PRODUCTION => "lacorepayments.com",
       DEMO => "dmo.lacorepayments.com",
-      STAGING => "lacorepayments.com", ##"stg.lacorepayments.com",
+      STAGING => "lacorepayments.com",
       SANDBOX => "sbx.lacorepayments.com",
       NEXT => "nxt.lacorepayments.com",
       IVV => "ivv.lacorepayments.com",
       TEST => "test.lpt.local",
-      DEV => "lpt.local" #"dev.lacorepayments.com",
-    }
+      DEV => "lpt.local"
+    }.freeze
 
-    cattr_accessor :ngrok, instance_accessor: false
-    cattr_accessor :active_env, instance_accessor: false
+    attr_accessor :api_base, :cx_base, :cx_api_base, :base_domain
+
+    def initialize(api_base: "", cx_base: "", cx_api_base: "", base_domain: "")
+      @api_base = api_base
+      @cx_base = cx_base
+      @cx_api_base = cx_api_base
+      @base_domain = base_domain
+    end
+
+    def ==(other)
+      api_base == other.api_base && base_domain == other.base_domain &&
+        cx_base == other.cx_base && cx_api_base == other.cx_api_base
+    end
+
+    def api_base_url
+      base_url(api_base)
+    end
+
+    def cx_base_url
+      base_url(cx_base)
+    end
+
+    def cx_api_base_url
+      base_url(cx_api_base)
+    end
 
     class << self
-      @active_env = nil
-
-      def active_env
-        unless @active_env
-          env = Rails.env
-          case env
-          when "production"
-            @active_env = PRODUCTION
-          when "development"
-            @active_env = STAGING
-          when "test"
-            @active_env = STAGING
-          else
-            @active_env = DEV
-          end
-        end
-        @active_env
-      end
-      def active_env=(new_env)
-        unless new_env
-          return
-        end
-
-        if new_env.is_a?(Integer)
-          unless ENVIRONMENTS.has_value?(new_env)
-            raise(ArgumentError, "Invalid LPT Environment: #{new_env}")
-          end
-          @active_env = new_env
-        else
-          key = new_env.to_s.downcase
-          unless ENVIRONMENTS.has_key?(key)
-            raise(ArgumentError, "Invalid LPT Environment: #{new_env}")
-          end
-          @active_env = ENVIRONMENTS[key]
-        end
+      def staging
+        factory(environment: STAGING)
       end
 
-      def base_url(host)
-        "https://#{host}.#{base_domain}/"
+      def production
+        factory(environment: PRODUCTION)
       end
 
-      def base_domain
-        BASE_DOMAINS[active_env] || raise(ArgumentError, "Base Domain not set for environment: #{active_env}")
+      def factory(environment: DEV)
+        args = Lpt.base_addresses(environment: environment)
+        args[:base_domain] = BASE_DOMAINS[environment]
+        new(**args)
       end
+    end
+
+    protected
+
+    def base_url(host)
+      "https://#{host}.#{base_domain}/"
     end
   end
 end
