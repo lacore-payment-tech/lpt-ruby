@@ -27,12 +27,15 @@ module Lpt
   LEVEL_ERROR = Logger::ERROR
   LEVEL_INFO = Logger::INFO
 
-  ENTITY_PREFIX = "LEN"
-  MERCHANT_PREFIX = "LMR"
+  PREFIX_ENTITY = "LEN"
+  PREFIX_MERCHANT = "LMR"
+  PREFIX_PROFILE = "LID"
 
   class << self
     attr_accessor :api_username, :api_password, :merchant, :merchant_account,
                   :entity, :proxy, :ca_store
+
+    attr_reader :api_version
 
     attr_writer :open_timeout, :read_timeout, :write_timeout,
                 :max_network_retries, :initial_network_retry_delay,
@@ -47,6 +50,10 @@ module Lpt
 
     def environment
       @environment || Lpt::Environment::DEV
+    end
+
+    def api_version
+      "v2"
     end
 
     def open_timeout
@@ -117,12 +124,12 @@ module Lpt
 
     def assert_merchant!
       msg = "Invalid Merchant: #{merchant}"
-      raise ArgumentError, msg unless merchant.start_with? MERCHANT_PREFIX
+      raise ArgumentError, msg unless merchant.start_with? PREFIX_MERCHANT
     end
 
     def assert_entity!
       msg = "Invalid Entity: #{entity}"
-      raise ArgumentError, msg unless entity.start_with? ENTITY_PREFIX
+      raise ArgumentError, msg unless entity.start_with? PREFIX_ENTITY
     end
 
     def standardize_environment(env)

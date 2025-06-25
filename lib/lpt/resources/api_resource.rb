@@ -10,11 +10,16 @@ module Lpt
           setter = :"#{k}="
           public_send(setter, v)
         end
+        assign_object_name
+      end
+
+      def object_name
+        assert_object_name_implemented!
+        @object_name
       end
 
       def base_path
-        # TODO: move into config
-        "/v2"
+        "/#{Lpt.api_version}"
       end
 
       def resources_path
@@ -25,19 +30,29 @@ module Lpt
       end
 
       def resource_path
+        assert_concrete_class_used!
         assert_valid_id_exists!
-        "#{base_resource_path}/#{CGI.escape(id)}"
+        "#{resources_path}/#{CGI.escape(id)}"
       end
 
       protected
 
+      def assign_object_name; end
+
       def assert_concrete_class_used!
-        return unless self == ApiResource
+        return unless instance_of? ApiResource
 
         msg = <<~MSG
           APIResource is an abstract class. You should perform actions on its
           subclasses (Payment, Instrument, etc.)
         MSG
+        raise NotImplementedError, msg
+      end
+
+      def assert_object_name_implemented!
+        return unless @object_name.blank?
+
+        msg = "Resources must implement #object_name"
         raise NotImplementedError, msg
       end
 
