@@ -35,7 +35,7 @@ module Lpt
 
     attr_accessor :api_base, :cx_base, :cx_api_base, :base_domain
 
-    def initialize(api_base:, cx_base:, cx_api_base:, base_domain:)
+    def initialize(api_base: "", cx_base: "", cx_api_base: "", base_domain: "")
       @api_base = api_base
       @cx_base = cx_base
       @cx_api_base = cx_api_base
@@ -69,18 +69,9 @@ module Lpt
       end
 
       def factory(environment: DEV)
-        args = base_addresses(environment: environment)
+        args = Lpt.base_addresses(environment: environment)
         args[:base_domain] = BASE_DOMAINS[environment]
         new(**args)
-      end
-
-      def base_addresses(environment:)
-        if environment == STAGING
-          { api_base: "staging-api-s2", cx_base: "cx.stg",
-            cx_api_base: "api.cx.stg" }
-        else
-          { api_base: "api", cx_base: "cx", cx_api_base: "api.cx" }
-        end
       end
     end
 
