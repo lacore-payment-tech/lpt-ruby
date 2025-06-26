@@ -3,6 +3,21 @@
 require "spec_helper"
 
 RSpec.describe Lpt::Resources::ApiResource do
+  describe "#initialize" do
+    it "set the attribute values" do
+      pending "implement"
+      raise
+    end
+
+    context "when passed an attribute with no setter method" do
+      it "does not raise an error" do
+        expect {
+          Lpt::Resources::ApiResource.new(fake_attribute: true)
+        }.not_to raise_error
+      end
+    end
+  end
+
   describe "#base_path" do
     it "returns the API version" do
       allow(Lpt).to receive(:api_version).and_return("vvv")

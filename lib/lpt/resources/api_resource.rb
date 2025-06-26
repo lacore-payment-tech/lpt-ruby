@@ -3,13 +3,11 @@
 module Lpt
   module Resources
     class ApiResource
-      attr_accessor :id, :entity, :metadata, :created, :updated, :status, :created_at, :updated_at
+      attr_accessor :id, :entity, :metadata, :created, :updated, :status,
+                    :created_at, :updated_at
 
       def initialize(attributes = {})
-        attributes.each_pair do |k, v|
-          setter = :"#{k}="
-          public_send(setter, v)
-        end
+        hydrate_attributes attributes
         assign_object_name
       end
 
@@ -57,7 +55,7 @@ module Lpt
       end
 
       def assert_valid_id_exists!
-        return if id
+        return if id.blank?
 
         msg = <<~MSG
           Could not determine which URL to request: #{self.class} instance has
@@ -66,22 +64,20 @@ module Lpt
         raise InvalidRequestError, msg
       end
 
-      protected
-        def load_from_response(response)
-          if response === nil
-            return false
-          end
+      def load_from_response(response)
+        return if response.blank?
 
-          response.each do |key, value|
-            begin
-              target = :"#{key}="
-              self.send(target, value)
-            rescue
-            end
-          end
+        hydrate_attributes response
+      end
 
-          return true
+      def hydrate_attributes(attributes)
+        attributes.each_pair do |k, v|
+          setter = :"#{k}="
+          public_send(setter, v)
+        rescue NoMethodError
+          # noop
         end
+      end
     end
   end
 end

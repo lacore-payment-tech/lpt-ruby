@@ -12,6 +12,7 @@ require_relative "lpt/lpt_client"
 
 require_relative "lpt/api_operations/create"
 require_relative "lpt/api_operations/retrieve"
+require_relative "lpt/api_operations/update"
 
 require_relative "lpt/resources/api_resource"
 require_relative "lpt/resources/profile"
