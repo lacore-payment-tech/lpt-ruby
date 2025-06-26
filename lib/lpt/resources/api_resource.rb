@@ -3,7 +3,7 @@
 module Lpt
   module Resources
     class ApiResource
-      attr_accessor :id, :created, :updated, :status, :created_at, :updated_at
+      attr_accessor :id, :entity, :metadata, :created, :updated, :status, :created_at, :updated_at
 
       def initialize(attributes = {})
         attributes.each_pair do |k, v|
@@ -65,6 +65,23 @@ module Lpt
         MSG
         raise InvalidRequestError, msg
       end
+
+      protected
+        def load_from_response(response)
+          if response === nil
+            return false
+          end
+
+          response.each do |key, value|
+            begin
+              target = :"#{key}="
+              self.send(target, value)
+            rescue
+            end
+          end
+
+          return true
+        end
     end
   end
 end

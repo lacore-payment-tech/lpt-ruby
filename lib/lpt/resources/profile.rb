@@ -5,8 +5,9 @@ module Lpt
     class Profile < ApiResource
       extend Lpt::ApiOperations::Retrieve
       extend Lpt::ApiOperations::Create
+      extend Lpt::ApiOperations::Update
 
-      attr_accessor :entity, :metadata, :profile_id, :reference_id, :name,
+      attr_accessor :profile_id, :reference_id, :name,
                     :contact, :address
 
       def id_prefix

@@ -30,7 +30,12 @@ module Lpt
 
   PREFIX_ENTITY = "LEN"
   PREFIX_MERCHANT = "LMR"
+  PREFIX_MERCHANT_ACCOUNT = "LMA"
   PREFIX_PROFILE = "LID"
+  PREFIX_INSTRUMENT = "LPI"
+  PREFIX_TOKEN = "LTK"
+  PREFIX_PAYMENT = "LPY"
+  PREFIX_VERIFICATION = "LPV"
 
   class << self
     include Lpt::Authentication
