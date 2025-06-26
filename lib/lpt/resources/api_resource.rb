@@ -55,13 +55,13 @@ module Lpt
       end
 
       def assert_valid_id_exists!
-        return if id.blank?
+        return unless id.blank?
 
         msg = <<~MSG
           Could not determine which URL to request: #{self.class} instance has
           an invalid ID: #{id.inspect}
         MSG
-        raise InvalidRequestError, msg
+        raise ArgumentError, msg
       end
 
       def load_from_response(response)

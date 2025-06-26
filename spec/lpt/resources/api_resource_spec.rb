@@ -4,9 +4,10 @@ require "spec_helper"
 
 RSpec.describe Lpt::Resources::ApiResource do
   describe "#initialize" do
-    it "set the attribute values" do
-      pending "implement"
-      raise
+    it "sets the attribute values" do
+      result = Lpt::Resources::ApiResource.new(id: "id123")
+
+      expect(result.id).to eq("id123")
     end
 
     context "when passed an attribute with no setter method" do
