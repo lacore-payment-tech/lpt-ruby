@@ -15,9 +15,12 @@ require_relative "lpt/api_operations/retrieve"
 require_relative "lpt/api_operations/update"
 
 require_relative "lpt/resources/api_resource"
+require_relative "lpt/resources/instrument"
 require_relative "lpt/resources/profile"
 
 require_relative "lpt/requests/api_request"
+require_relative "lpt/requests/instrument_request"
+require_relative "lpt/requests/instrument_token_request"
 require_relative "lpt/requests/profile_request"
 
 module Lpt

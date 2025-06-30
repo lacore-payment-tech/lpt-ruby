@@ -16,12 +16,12 @@ module ClientHelper
       to_return(status: status, body: response_body, headers: headers)
   end
 
-  def stub_post_request(url:, request_body:, status:, response_body:)
+  def stub_post_request(url:, status:, response_body:)
     request_headers = { "Content-Type": "application/json" }
     response_headers = { "content-type": "application/json; charset=UTF-8" }
 
     stub_request(:post, url).
-      with(body: request_body, headers: request_headers).
+      with(headers: request_headers).
       to_return(status: status, body: response_body, headers: response_headers)
   end
 end
