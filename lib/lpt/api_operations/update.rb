@@ -3,7 +3,7 @@
 module Lpt
   module ApiOperations
     module Update
-      def update(id, request, _opts = {})
+      def update(id, request)
         client = Lpt.client
         resource = new(id: id)
         response = client.put(resource.resource_path, request.to_json)

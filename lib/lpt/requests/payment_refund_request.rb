@@ -3,9 +3,7 @@
 module Lpt
   module Requests
     class PaymentRefundRequest < ApiRequest
-      attr_accessor :reference_id,
-                    :amount,
-                    :session
+      attr_accessor :reference_id, :amount, :session
     end
   end
 end
