@@ -10,7 +10,7 @@ module Lpt
       attr_accessor :profile, :metadata, :instrument_id, :reference_id,
                     :category, :type, :account_type, :name, :contact,
                     :address, :identifier, :brand, :network, :issuer_identifier,
-                    :issuer, :expiration, :fingerprint
+                    :issuer, :expiration, :fingerprint, :token
 
       def id_prefix
         Lpt::PREFIX_INSTRUMENT

@@ -3,17 +3,20 @@
 module Lpt
   module Requests
     class ApiRequest
-      attr_writer :entity
+      attr_accessor :entity
 
       def initialize(attributes = {})
         attributes.each_pair do |k, v|
           setter = :"#{k}="
           public_send(setter, v)
         end
+        assign_default_entity
       end
 
-      def entity
-        @entity || Lpt.entity
+      protected
+
+      def assign_default_entity
+        self.entity ||= Lpt.entity
       end
     end
   end
