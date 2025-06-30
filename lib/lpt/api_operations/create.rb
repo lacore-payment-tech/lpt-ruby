@@ -3,10 +3,11 @@
 module Lpt
   module ApiOperations
     module Create
-      def create(request)
+      def create(request, path: nil)
         client = Lpt.client
         resource = new
-        response = client.post(resource.resources_path, request.to_json)
+        path ||= resource.resources_path
+        response = client.post(path, request.to_json)
         handle_response resource, response
         resource
       end

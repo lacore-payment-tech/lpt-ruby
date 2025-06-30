@@ -10,6 +10,10 @@ module ClientHelper
     Lpt.environment = environment
   end
 
+  def stub_lpt_client(client)
+    allow(Lpt).to receive(:client).and_return(client)
+  end
+
   def stub_get_request(url:, status:, response_body:)
     headers = { "content-type": "application/json; charset=UTF-8" }
     stub_request(:get, url).
@@ -17,11 +21,9 @@ module ClientHelper
   end
 
   def stub_post_request(url:, status:, response_body:)
-    request_headers = { "Content-Type": "application/json" }
     response_headers = { "content-type": "application/json; charset=UTF-8" }
 
     stub_request(:post, url).
-      with(headers: request_headers).
       to_return(status: status, body: response_body, headers: response_headers)
   end
 end

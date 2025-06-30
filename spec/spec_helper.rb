@@ -19,5 +19,6 @@ RSpec.configure do |config|
 
   config.include ClientHelper
   config.include InstrumentHelper
+  config.include PaymentHelper
   config.include ProfileHelper
 end
