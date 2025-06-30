@@ -48,4 +48,26 @@ RSpec.describe Lpt::Resources::ApiResource do
       }.to raise_error(NotImplementedError)
     end
   end
+
+  describe "#load_from_response" do
+    it "sets the attributes" do
+      resource = Lpt::Resources::ApiResource.new
+      response = { id: "LID" }
+
+      resource.load_from_response(response)
+
+      expect(resource.id).to eq("LID")
+    end
+
+    context "when the response is empty" do
+      it "does not set any attributes" do
+        resource = Lpt::Resources::ApiResource.new
+        response = {}
+
+        resource.load_from_response(response)
+
+        expect(resource.id).to be_blank
+      end
+    end
+  end
 end

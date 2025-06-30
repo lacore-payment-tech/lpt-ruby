@@ -3,11 +3,24 @@
 module Lpt
   module ApiOperations
     module Create
-      def create(request, _opts = {})
+      def create(request)
         client = Lpt.client
         resource = new
         response = client.post(resource.resources_path, request.to_json)
-        new(response.body)
+        handle_response resource, response
+        resource
+      end
+
+      protected
+
+      def post_request_failed?(response)
+        response.blank? || response.status > 201
+      end
+
+      def handle_response(resource, response)
+        return false if post_request_failed? response
+
+        resource.load_from_response(response.body)
       end
     end
   end

@@ -33,6 +33,12 @@ module Lpt
         "#{resources_path}/#{CGI.escape(id)}"
       end
 
+      def load_from_response(response)
+        return if response.blank?
+
+        hydrate_attributes response
+      end
+
       protected
 
       def assign_object_name; end
@@ -62,12 +68,6 @@ module Lpt
           an invalid ID: #{id.inspect}
         MSG
         raise ArgumentError, msg
-      end
-
-      def load_from_response(response)
-        return if response.blank?
-
-        hydrate_attributes response
       end
 
       def hydrate_attributes(attributes)

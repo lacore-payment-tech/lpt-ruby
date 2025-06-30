@@ -9,7 +9,7 @@ module InstrumentHelper
 
   def stub_instrument_create
     stub_post_request url: "https://api.test.lpt.local/v2/instruments",
-                      status: 200,
+                      status: 201,
                       response_body: instrument_response
   end
 
