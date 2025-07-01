@@ -12,11 +12,18 @@ require_relative "lpt/lpt_client"
 
 require_relative "lpt/api_operations/create"
 require_relative "lpt/api_operations/retrieve"
+require_relative "lpt/api_operations/update"
 
 require_relative "lpt/resources/api_resource"
+require_relative "lpt/resources/instrument"
+require_relative "lpt/resources/payment"
 require_relative "lpt/resources/profile"
 
 require_relative "lpt/requests/api_request"
+require_relative "lpt/requests/empty_request"
+require_relative "lpt/requests/instrument_request"
+require_relative "lpt/requests/instrument_token_request"
+require_relative "lpt/requests/payment_request"
 require_relative "lpt/requests/profile_request"
 
 module Lpt
@@ -30,7 +37,12 @@ module Lpt
 
   PREFIX_ENTITY = "LEN"
   PREFIX_MERCHANT = "LMR"
+  PREFIX_MERCHANT_ACCOUNT = "LMA"
   PREFIX_PROFILE = "LID"
+  PREFIX_INSTRUMENT = "LPI"
+  PREFIX_TOKEN = "LTK"
+  PREFIX_PAYMENT = "LPY"
+  PREFIX_VERIFICATION = "LPV"
 
   class << self
     include Lpt::Authentication

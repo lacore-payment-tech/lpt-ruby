@@ -1,20 +1,19 @@
 # frozen_string_literal: true
 
 module ProfileHelper
-  def stub_profile_retrieve(id: "LID")
+  def stub_profile_retrieve(id: Lpt::PREFIX_PROFILE)
     stub_get_request url: "https://api.test.lpt.local/v2/profiles/#{id}",
                      response_body: profile_response(id: id),
                      status: 200
   end
 
-  def stub_profile_create(request:)
+  def stub_profile_create
     stub_post_request url: "https://api.test.lpt.local/v2/profiles",
-                      request_body: request.to_json,
                       status: 200,
                       response_body: profile_response
   end
 
-  def profile_response(id: "LIDXXXXXXXXXXX")
+  def profile_response(id: Lpt::PREFIX_PROFILE)
     <<~JSON
       {
         "id": "#{id}",

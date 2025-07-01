@@ -3,13 +3,11 @@
 module Lpt
   module Resources
     class ApiResource
-      attr_accessor :id, :created, :updated, :status, :created_at, :updated_at
+      attr_accessor :id, :entity, :metadata, :created, :updated, :status,
+                    :created_at, :updated_at
 
       def initialize(attributes = {})
-        attributes.each_pair do |k, v|
-          setter = :"#{k}="
-          public_send(setter, v)
-        end
+        hydrate_attributes attributes
         assign_object_name
       end
 
@@ -35,6 +33,12 @@ module Lpt
         "#{resources_path}/#{CGI.escape(id)}"
       end
 
+      def load_from_response(response)
+        return if response.blank?
+
+        hydrate_attributes response
+      end
+
       protected
 
       def assign_object_name; end
@@ -57,13 +61,22 @@ module Lpt
       end
 
       def assert_valid_id_exists!
-        return if id
+        return unless id.blank?
 
         msg = <<~MSG
           Could not determine which URL to request: #{self.class} instance has
           an invalid ID: #{id.inspect}
         MSG
-        raise InvalidRequestError, msg
+        raise ArgumentError, msg
+      end
+
+      def hydrate_attributes(attributes)
+        attributes.each_pair do |k, v|
+          setter = :"#{k}="
+          public_send(setter, v)
+        rescue NoMethodError
+          # noop
+        end
       end
     end
   end
