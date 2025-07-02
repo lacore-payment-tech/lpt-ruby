@@ -11,6 +11,132 @@ RSpec.describe Lpt::Resources::Instrument do
     end
   end
 
+  describe "#auth" do
+    before { configure_client }
+
+    it "returns a truthy value" do
+      instrument_id = "LPI123123123123"
+      instrument = Lpt::Resources::Instrument.new(id: instrument_id)
+      request = Lpt::Requests::PaymentRequest.new
+      stub_payment_create
+
+      result = instrument.auth(request)
+
+      expect(result).to be_truthy
+    end
+
+    it "assigns the auth capture workflow to the request" do
+      instrument_id = "LPI123123123123"
+      instrument = Lpt::Resources::Instrument.new(id: instrument_id)
+      request = Lpt::Requests::PaymentRequest.new
+      allow(request).to receive(:workflow=).and_call_original
+      stub_payment_create
+
+      instrument.auth(request)
+
+      expect(request).to have_received(:workflow=).once.with(
+        Lpt::Resources::Payment::WORKFLOW_AUTH_CAPTURE
+      )
+    end
+
+    it "assigns the instrument ID to the request" do
+      instrument_id = "LPI123123123123"
+      instrument = Lpt::Resources::Instrument.new(id: instrument_id)
+      request = Lpt::Requests::PaymentRequest.new
+      allow(request).to receive(:instrument=).and_call_original
+      stub_payment_create
+
+      instrument.auth(request)
+
+      expect(request).to have_received(:instrument=).once.with(instrument_id)
+    end
+
+    it "sends a create payment request" do
+      instrument_id = "LPI123123123123"
+      instrument = Lpt::Resources::Instrument.new(id: instrument_id)
+      request = Lpt::Requests::PaymentRequest.new
+      stub_payment_create
+
+      result = instrument.auth(request)
+
+      expect(result.id).to be_present
+    end
+
+    context "when the instrument does not have an ID" do
+      it "returns a falsy value" do
+        instrument = Lpt::Resources::Instrument.new(id: nil)
+        request = Lpt::Requests::PaymentRequest.new
+
+        result = instrument.auth(request)
+
+        expect(result).to be_falsy
+      end
+    end
+  end
+
+  describe "#charge" do
+    before { configure_client }
+
+    it "returns a truthy value" do
+      instrument_id = "LPI123123123123"
+      instrument = Lpt::Resources::Instrument.new(id: instrument_id)
+      request = Lpt::Requests::PaymentRequest.new
+      stub_payment_create
+
+      result = instrument.charge(request)
+
+      expect(result).to be_truthy
+    end
+
+    it "assigns the sale workflow to the request" do
+      instrument_id = "LPI123123123123"
+      instrument = Lpt::Resources::Instrument.new(id: instrument_id)
+      request = Lpt::Requests::PaymentRequest.new
+      allow(request).to receive(:workflow=).and_call_original
+      stub_payment_create
+
+      instrument.charge(request)
+
+      expect(request).to have_received(:workflow=).once.with(
+        Lpt::Resources::Payment::WORKFLOW_SALE
+      )
+    end
+
+    it "assigns the instrument ID to the request" do
+      instrument_id = "LPI123123123123"
+      instrument = Lpt::Resources::Instrument.new(id: instrument_id)
+      request = Lpt::Requests::PaymentRequest.new
+      allow(request).to receive(:instrument=).and_call_original
+      stub_payment_create
+
+      instrument.charge(request)
+
+      expect(request).to have_received(:instrument=).once.with(instrument_id)
+    end
+
+    it "sends a create payment request" do
+      instrument_id = "LPI123123123123"
+      instrument = Lpt::Resources::Instrument.new(id: instrument_id)
+      request = Lpt::Requests::PaymentRequest.new
+      stub_payment_create
+
+      result = instrument.charge(request)
+
+      expect(result.id).to be_present
+    end
+
+    context "when the instrument does not have an ID" do
+      it "returns a falsy value" do
+        instrument = Lpt::Resources::Instrument.new(id: nil)
+        request = Lpt::Requests::PaymentRequest.new
+
+        result = instrument.charge(request)
+
+        expect(result).to be_falsy
+      end
+    end
+  end
+
   describe ".retrieve" do
     before { configure_client }
 
