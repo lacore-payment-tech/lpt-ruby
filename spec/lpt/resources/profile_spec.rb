@@ -11,7 +11,7 @@ RSpec.describe Lpt::Resources::Profile do
     end
   end
 
-  describe "#create_instrument" do
+  describe "#associate_instrument" do
     before { configure_client }
 
     it "returns a truthy value" do
