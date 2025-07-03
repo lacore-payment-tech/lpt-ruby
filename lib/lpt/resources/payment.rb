@@ -40,6 +40,16 @@ module Lpt
         Lpt::Resources::Payment.create(request, path: path)
       end
 
+      def self.auth(request)
+        request.workflow = WORKFLOW_AUTH_CAPTURE
+        Lpt::Resources::Payment.create(request)
+      end
+
+      def self.sale(request)
+        request.workflow = WORKFLOW_SALE
+        Lpt::Resources::Payment.create(request)
+      end
+
       protected
 
       def assign_object_name

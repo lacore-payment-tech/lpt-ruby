@@ -115,6 +115,56 @@ RSpec.describe Lpt::Resources::Payment do
     end
   end
 
+  describe ".auth" do
+    before { configure_client }
+
+    it "assigns the auth capture workflow to the request" do
+      request = Lpt::Requests::PaymentRequest.new
+      allow(request).to receive(:workflow=).and_call_original
+      stub_payment_create
+
+      Lpt::Resources::Payment.auth(request)
+
+      expect(request).to have_received(:workflow=).once.with(
+        Lpt::Resources::Payment::WORKFLOW_AUTH_CAPTURE
+      )
+    end
+
+    it "returns a payment" do
+      request = Lpt::Requests::PaymentRequest.new(instrument: "LPIXXXXXXXX")
+      stub_payment_create
+
+      result = Lpt::Resources::Payment.auth(request)
+
+      expect(result.id).to start_with(Lpt::PREFIX_PAYMENT)
+    end
+  end
+
+  describe ".sale" do
+    before { configure_client }
+
+    it "assigns the sale workflow to the request" do
+      request = Lpt::Requests::PaymentRequest.new
+      allow(request).to receive(:workflow=).and_call_original
+      stub_payment_create
+
+      Lpt::Resources::Payment.sale(request)
+
+      expect(request).to have_received(:workflow=).once.with(
+        Lpt::Resources::Payment::WORKFLOW_SALE
+      )
+    end
+
+    it "returns a payment" do
+      request = Lpt::Requests::PaymentRequest.new(instrument: "LPIXXXXXXX")
+      stub_payment_create
+
+      result = Lpt::Resources::Payment.sale(request)
+
+      expect(result.id).to start_with(Lpt::PREFIX_PAYMENT)
+    end
+  end
+
   describe ".retrieve" do
     before { configure_client }
 

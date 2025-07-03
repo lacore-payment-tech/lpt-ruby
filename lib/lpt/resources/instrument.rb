@@ -17,13 +17,19 @@ module Lpt
       end
 
       def auth(payment_request)
-        create_payment(payment_request,
-                       workflow: Lpt::Resources::Payment::WORKFLOW_AUTH_CAPTURE)
+        assert_valid_id_exists!
+        payment_request.instrument = id
+        Lpt::Resources::Payment.auth(payment_request)
+      rescue ArgumentError
+        false
       end
 
       def charge(payment_request)
-        create_payment(payment_request,
-                       workflow: Lpt::Resources::Payment::WORKFLOW_SALE)
+        assert_valid_id_exists!
+        payment_request.instrument = id
+        Lpt::Resources::Payment.sale(payment_request)
+      rescue ArgumentError
+        false
       end
 
       def self.tokenize(instrument_token_request)
@@ -42,15 +48,6 @@ module Lpt
         return if id.present?
 
         raise ArgumentError, "An instrument ID is required"
-      end
-
-      def create_payment(payment_request, workflow:)
-        assert_valid_id_exists!
-        payment_request.workflow = workflow
-        payment_request.instrument = id
-        Lpt::Resources::Payment.create(payment_request)
-      rescue ArgumentError
-        false
       end
     end
   end
