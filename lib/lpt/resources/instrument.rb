@@ -26,6 +26,12 @@ module Lpt
                        workflow: Lpt::Resources::Payment::WORKFLOW_SALE)
       end
 
+      def self.tokenize(instrument_token_request)
+        resource = new
+        path = "#{resource.resources_path}/token"
+        Lpt::Resources::Instrument.create(instrument_token_request, path: path)
+      end
+
       protected
 
       def assign_object_name

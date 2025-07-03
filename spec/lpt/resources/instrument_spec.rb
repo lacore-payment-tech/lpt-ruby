@@ -137,6 +137,23 @@ RSpec.describe Lpt::Resources::Instrument do
     end
   end
 
+  describe ".tokenize" do
+    before { configure_client }
+
+    it "returns the tokenized instrument" do
+      token_id = "#{Lpt::PREFIX_TOKEN}XXXXXXXX"
+      stub_instrument_tokenize token_id: token_id
+      request = Lpt::Requests::InstrumentTokenRequest.new(
+        account: "4242424242424242", security_code: "444",
+        expiration: "04/2044"
+      )
+
+      result = Lpt::Resources::Instrument.tokenize(request)
+
+      expect(result.id).to eq(token_id)
+    end
+  end
+
   describe ".retrieve" do
     before { configure_client }
 
