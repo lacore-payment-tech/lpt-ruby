@@ -16,6 +16,16 @@ module Lpt
         Lpt::PREFIX_INSTRUMENT
       end
 
+      def auth(payment_request)
+        create_payment(payment_request,
+                       workflow: Lpt::Resources::Payment::WORKFLOW_AUTH_CAPTURE)
+      end
+
+      def charge(payment_request)
+        create_payment(payment_request,
+                       workflow: Lpt::Resources::Payment::WORKFLOW_SALE)
+      end
+
       def self.tokenize(instrument_token_request)
         resource = new
         path = "#{resource.resources_path}/token"
@@ -26,6 +36,21 @@ module Lpt
 
       def assign_object_name
         @object_name = "instrument"
+      end
+
+      def assert_valid_id_exists!
+        return if id.present?
+
+        raise ArgumentError, "An instrument ID is required"
+      end
+
+      def create_payment(payment_request, workflow:)
+        assert_valid_id_exists!
+        payment_request.workflow = workflow
+        payment_request.instrument = id
+        Lpt::Resources::Payment.create(payment_request)
+      rescue ArgumentError
+        false
       end
     end
   end

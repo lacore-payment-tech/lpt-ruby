@@ -7,6 +7,9 @@ module Lpt
       extend Lpt::ApiOperations::Create
       extend Lpt::ApiOperations::Update
 
+      WORKFLOW_SALE = "SALE"
+      WORKFLOW_AUTH_CAPTURE = "AUTH_CAPTURE"
+
       attr_accessor :payment_id, :reference_id, :instrument,
                     :instrument_identifier, :initiation, :merchant,
                     :merchant_account, :workflow, :amount, :currency, :order,
