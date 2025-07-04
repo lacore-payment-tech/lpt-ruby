@@ -16,6 +16,14 @@ module Lpt
         Lpt::PREFIX_INSTRUMENT
       end
 
+      def expiration_month
+        expiration.with_indifferent_access["month"]
+      end
+
+      def expiration_year
+        expiration.with_indifferent_access["year"]
+      end
+
       def auth(payment_request)
         create_payment(payment_request,
                        workflow: Lpt::Resources::Payment::WORKFLOW_AUTH_CAPTURE)
