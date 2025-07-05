@@ -25,20 +25,6 @@ RSpec.describe Lpt::Resources::Instrument do
       expect(result).to be_truthy
     end
 
-    it "assigns the auth capture workflow to the request" do
-      instrument_id = "LPI123123123123"
-      instrument = Lpt::Resources::Instrument.new(id: instrument_id)
-      request = Lpt::Requests::PaymentRequest.new
-      allow(request).to receive(:workflow=).and_call_original
-      stub_payment_create
-
-      instrument.auth(request)
-
-      expect(request).to have_received(:workflow=).once.with(
-        Lpt::Resources::Payment::WORKFLOW_AUTH_CAPTURE
-      )
-    end
-
     it "assigns the instrument ID to the request" do
       instrument_id = "LPI123123123123"
       instrument = Lpt::Resources::Instrument.new(id: instrument_id)
@@ -51,15 +37,16 @@ RSpec.describe Lpt::Resources::Instrument do
       expect(request).to have_received(:instrument=).once.with(instrument_id)
     end
 
-    it "sends a create payment request" do
+    it "sends a payment auth request" do
       instrument_id = "LPI123123123123"
       instrument = Lpt::Resources::Instrument.new(id: instrument_id)
       request = Lpt::Requests::PaymentRequest.new
       stub_payment_create
+      allow(Lpt::Resources::Payment).to receive(:auth)
 
-      result = instrument.auth(request)
+      instrument.auth(request)
 
-      expect(result.id).to be_present
+      expect(Lpt::Resources::Payment).to have_received(:auth).once.with(request)
     end
 
     context "when the instrument does not have an ID" do
@@ -88,20 +75,6 @@ RSpec.describe Lpt::Resources::Instrument do
       expect(result).to be_truthy
     end
 
-    it "assigns the sale workflow to the request" do
-      instrument_id = "LPI123123123123"
-      instrument = Lpt::Resources::Instrument.new(id: instrument_id)
-      request = Lpt::Requests::PaymentRequest.new
-      allow(request).to receive(:workflow=).and_call_original
-      stub_payment_create
-
-      instrument.charge(request)
-
-      expect(request).to have_received(:workflow=).once.with(
-        Lpt::Resources::Payment::WORKFLOW_SALE
-      )
-    end
-
     it "assigns the instrument ID to the request" do
       instrument_id = "LPI123123123123"
       instrument = Lpt::Resources::Instrument.new(id: instrument_id)
@@ -114,15 +87,16 @@ RSpec.describe Lpt::Resources::Instrument do
       expect(request).to have_received(:instrument=).once.with(instrument_id)
     end
 
-    it "sends a create payment request" do
+    it "sends a sale payment request" do
       instrument_id = "LPI123123123123"
       instrument = Lpt::Resources::Instrument.new(id: instrument_id)
       request = Lpt::Requests::PaymentRequest.new
       stub_payment_create
+      allow(Lpt::Resources::Payment).to receive(:sale)
 
-      result = instrument.charge(request)
+      instrument.charge(request)
 
-      expect(result.id).to be_present
+      expect(Lpt::Resources::Payment).to have_received(:sale).once.with(request)
     end
 
     context "when the instrument does not have an ID" do
