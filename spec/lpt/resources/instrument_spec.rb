@@ -11,6 +11,30 @@ RSpec.describe Lpt::Resources::Instrument do
     end
   end
 
+  describe "#expiration_month" do
+    it "returns the month from the expiration hash" do
+      instrument = Lpt::Resources::Instrument.new(
+        expiration: { month: "04", year: "2044" }
+      )
+
+      result = instrument.expiration_month
+
+      expect(result).to eq("04")
+    end
+  end
+
+  describe "#expiration_year" do
+    it "returns the year from the expiration hash" do
+      instrument = Lpt::Resources::Instrument.new(
+        expiration: { month: "04", year: "2044" }
+      )
+
+      result = instrument.expiration_year
+
+      expect(result).to eq("2044")
+    end
+  end
+
   describe "#auth" do
     before { configure_client }
 
