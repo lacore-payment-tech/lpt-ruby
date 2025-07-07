@@ -7,9 +7,6 @@ module Lpt
       extend Lpt::ApiOperations::Create
       extend Lpt::ApiOperations::Update
 
-      WORKFLOW_SALE = "SALE"
-      WORKFLOW_AUTH_CAPTURE = "AUTH_CAPTURE"
-
       attr_accessor :payment_id, :reference_id, :instrument,
                     :instrument_identifier, :initiation, :merchant,
                     :merchant_account, :workflow, :amount, :currency, :order,
@@ -40,14 +37,14 @@ module Lpt
         Lpt::Resources::Payment.create(request, path: path)
       end
 
-      def self.auth(request)
-        request.workflow = WORKFLOW_AUTH_CAPTURE
-        Lpt::Resources::Payment.create(request)
+      def self.auth(payment_request)
+        payment_request.as_auth_capture
+        Lpt::Resources::Payment.create(payment_request)
       end
 
-      def self.sale(request)
-        request.workflow = WORKFLOW_SALE
-        Lpt::Resources::Payment.create(request)
+      def self.sale(payment_request)
+        payment_request.as_sale
+        Lpt::Resources::Payment.create(payment_request)
       end
 
       protected

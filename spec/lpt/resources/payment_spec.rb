@@ -120,14 +120,12 @@ RSpec.describe Lpt::Resources::Payment do
 
     it "assigns the auth capture workflow to the request" do
       request = Lpt::Requests::PaymentRequest.new
-      allow(request).to receive(:workflow=).and_call_original
+      allow(request).to receive(:as_auth_capture).and_call_original
       stub_payment_create
 
       Lpt::Resources::Payment.auth(request)
 
-      expect(request).to have_received(:workflow=).once.with(
-        Lpt::Resources::Payment::WORKFLOW_AUTH_CAPTURE
-      )
+      expect(request).to have_received(:as_auth_capture).once
     end
 
     it "returns a payment" do
@@ -145,14 +143,12 @@ RSpec.describe Lpt::Resources::Payment do
 
     it "assigns the sale workflow to the request" do
       request = Lpt::Requests::PaymentRequest.new
-      allow(request).to receive(:workflow=).and_call_original
+      allow(request).to receive(:as_sale).and_call_original
       stub_payment_create
 
       Lpt::Resources::Payment.sale(request)
 
-      expect(request).to have_received(:workflow=).once.with(
-        Lpt::Resources::Payment::WORKFLOW_SALE
-      )
+      expect(request).to have_received(:as_sale).once
     end
 
     it "returns a payment" do
