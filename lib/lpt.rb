@@ -67,9 +67,10 @@ module Lpt
     end
 
     def base_addresses(environment: nil)
-      if environment == Lpt::Environment::STAGING
-        { api_base: "staging-api-s2", cx_base: "cx.stg",
-          cx_api_base: "api.cx.stg" }
+      if environment == Lpt::Environment::PRODUCTION
+        { api_base: "api-s2", cx_base: "cx", cx_api_base: "api.cx" }
+      elsif environment == Lpt::Environment::STAGING
+        { api_base: "staging-api-s2", cx_base: "cx.stg", cx_api_base: "api.cx.stg" }
       else
         { api_base: "api", cx_base: "cx", cx_api_base: "api.cx" }
       end
