@@ -39,7 +39,7 @@ module Lpt
         return if Lpt.log_level.negative?
 
         config.response :logger, nil, **logging_options do |fmt|
-          fmt.filter(/^(Buthorization: ).*$/i, '\1[REDACTED]')
+          fmt.filter(/^(Authorization: ).*$/i, '\1[REDACTED]')
         end
       end
 
