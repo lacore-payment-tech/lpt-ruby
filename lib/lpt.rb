@@ -34,6 +34,7 @@ module Lpt
   LEVEL_DEBUG = Logger::DEBUG
   LEVEL_ERROR = Logger::ERROR
   LEVEL_INFO = Logger::INFO
+  LEVEL_TEST = -1
 
   PREFIX_ENTITY = "LEN"
   PREFIX_MERCHANT = "LMR"

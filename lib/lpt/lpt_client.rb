@@ -25,13 +25,34 @@ module Lpt
         { headers: true, bodies: true, log_level: Lpt.log_level }
       end
 
+      def configure_request(config)
+        config.request :authorization, :basic, Lpt.api_username, Lpt.api_password
+        config.request :json
+      end
+
+      def configure_response(config)
+        config.response :json
+        config.response :raise_error
+      end
+
+      def configure_logging(config)
+        return if Lpt.log_level.negative?
+
+        config.response :logger, nil, **logging_options do |fmt|
+          fmt.filter(/^(Buthorization: ).*$/i, '\1[REDACTED]')
+        end
+      end
+
+      def assign_adapter(config)
+        config.adapter :net_http
+      end
+
       def initialize_client(api_base_url:, options:)
         Faraday.new(url: api_base_url, **options) do |config|
-          config.request :authorization, :basic, Lpt.api_username, Lpt.api_password
-          config.request :json
-          config.response :json
-          config.response :raise_error
-          config.adapter :net_http
+          configure_request config
+          configure_response config
+          configure_logging config
+          assign_adapter config
         end
       end
     end
