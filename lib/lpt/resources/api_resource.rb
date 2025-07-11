@@ -71,6 +71,8 @@ module Lpt
       end
 
       def hydrate_attributes(attributes)
+        return unless attributes.respond_to? :each_pair
+
         attributes.each_pair do |k, v|
           setter = :"#{k}="
           public_send(setter, v)

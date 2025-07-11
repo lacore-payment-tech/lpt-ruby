@@ -17,6 +17,14 @@ RSpec.describe Lpt::Resources::ApiResource do
         }.not_to raise_error
       end
     end
+
+    context "when key/value pairs are not passed in" do
+      it "does not raise an error" do
+        expect {
+          Lpt::Resources::ApiResource.new("OK")
+        }.not_to raise_error
+      end
+    end
   end
 
   describe "#base_path" do

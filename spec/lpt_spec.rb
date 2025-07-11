@@ -8,6 +8,18 @@ RSpec.describe Lpt do
   end
 
   describe "#base_addresses" do
+    context "when the environment is production" do
+      it "returns the prodution base addresses" do
+        prod_env = Lpt::Environment::PRODUCTION
+        prod_base = { api_base: "api-s2", cx_base: "cx",
+                      cx_api_base: "api.cx" }
+
+        result = Lpt.base_addresses(environment: prod_env)
+
+        expect(result).to eq(prod_base)
+      end
+    end
+
     context "when the environment is staging" do
       it "returns the staging base addresses" do
         staging_env = Lpt::Environment::STAGING
@@ -22,11 +34,11 @@ RSpec.describe Lpt do
 
     context "when the environment is not staging" do
       it "returns the non-staging base addresses" do
-        prod_env = Lpt::Environment::PRODUCTION
+        test_env = Lpt::Environment::TEST
         non_staging_base = { api_base: "api", cx_base: "cx",
                              cx_api_base: "api.cx" }
 
-        result = Lpt.base_addresses(environment: prod_env)
+        result = Lpt.base_addresses(environment: test_env)
 
         expect(result).to eq(non_staging_base)
       end

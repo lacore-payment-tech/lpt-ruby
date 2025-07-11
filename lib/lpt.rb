@@ -34,6 +34,7 @@ module Lpt
   LEVEL_DEBUG = Logger::DEBUG
   LEVEL_ERROR = Logger::ERROR
   LEVEL_INFO = Logger::INFO
+  LEVEL_TEST = -1
 
   PREFIX_ENTITY = "LEN"
   PREFIX_MERCHANT = "LMR"
@@ -67,10 +68,12 @@ module Lpt
     end
 
     def base_addresses(environment: nil)
-      if environment == Lpt::Environment::PRODUCTION
+      case environment
+      when Lpt::Environment::PRODUCTION
         { api_base: "api-s2", cx_base: "cx", cx_api_base: "api.cx" }
-      elsif environment == Lpt::Environment::STAGING
-        { api_base: "staging-api-s2", cx_base: "cx.stg", cx_api_base: "api.cx.stg" }
+      when Lpt::Environment::STAGING
+        { api_base: "staging-api-s2", cx_base: "cx.stg",
+          cx_api_base: "api.cx.stg" }
       else
         { api_base: "api", cx_base: "cx", cx_api_base: "api.cx" }
       end
