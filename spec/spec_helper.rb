@@ -1,10 +1,13 @@
 # frozen_string_literal: true
 
+require "pry"
 require "webmock/rspec"
 
 require "lpt"
 
 Dir["./spec/support/**/*.rb"].sort.each { |f| require f }
+
+Lpt.log_level = Lpt::LEVEL_TEST
 
 RSpec.configure do |config|
   # Enable flags like --only-failures and --next-failure
