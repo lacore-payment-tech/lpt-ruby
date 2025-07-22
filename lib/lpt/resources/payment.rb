@@ -13,6 +13,10 @@ module Lpt
                     :invoice, :session, :profile, :authorization, :presentment,
                     :reversal, :refunds, :amount_refundable, :result, :url
 
+      def approved?
+        result.with_indifferent_access["approved"] == "true"
+      end
+
       def id_prefix
         Lpt::PREFIX_PAYMENT
       end

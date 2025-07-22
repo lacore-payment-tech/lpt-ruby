@@ -11,6 +11,24 @@ RSpec.describe Lpt::Resources::Payment do
     end
   end
 
+  describe "#approved?" do
+    context "when the result approved flag is set to true" do
+      it "is approved" do
+        payment = Lpt::Resources::Payment.new(result: { approved: "true" })
+
+        expect(payment).to be_approved
+      end
+    end
+
+    context "when the result approved flag is not set to true" do
+      it "is not approved" do
+        payment = Lpt::Resources::Payment.new(result: { approved: "false" })
+
+        expect(payment).not_to be_approved
+      end
+    end
+  end
+
   describe "#capture" do
     before { configure_client }
 
