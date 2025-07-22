@@ -135,6 +135,26 @@ RSpec.describe Lpt::Resources::Instrument do
     end
   end
 
+  describe ".token_path" do
+    context "when not entity is passed in" do
+      it "returns the base path" do
+        result = Lpt::Resources::Instrument.token_path
+
+        expect(result).to eq("/v2/instruments/token")
+      end
+    end
+
+    context "when an entity is passed in" do
+      it "returns the base path with the entity" do
+        entity = "LEN123"
+
+        result = Lpt::Resources::Instrument.token_path(entity: entity)
+
+        expect(result).to eq("/v2/instruments/token/LEN123")
+      end
+    end
+  end
+
   describe ".tokenize" do
     before { configure_client }
 

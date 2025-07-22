@@ -79,6 +79,10 @@ module Lpt
       end
     end
 
+    def token_path(entity: nil)
+      Lpt::Resources::Instrument.token_path(entity: entity)
+    end
+
     def open_timeout
       @open_timeout || 30
     end
