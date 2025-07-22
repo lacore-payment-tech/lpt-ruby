@@ -47,8 +47,8 @@ module Lpt
         cx_base == other.cx_base && cx_api_base == other.cx_api_base
     end
 
-    def api_base_url
-      base_url(api_base)
+    def api_base_url(with_protocol: true)
+      base_url(api_base, with_protocol: with_protocol)
     end
 
     def cx_base_url
@@ -77,8 +77,9 @@ module Lpt
 
     protected
 
-    def base_url(host)
-      "https://#{host}.#{base_domain}/"
+    def base_url(cname, with_protocol: true)
+      protocol = "https://" if with_protocol
+      "#{protocol}#{cname}.#{base_domain}"
     end
   end
 end
