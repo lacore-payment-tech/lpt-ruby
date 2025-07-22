@@ -27,6 +27,22 @@ RSpec.describe Lpt::Resources::Payment do
         expect(payment).not_to be_approved
       end
     end
+
+    context "when the result is not set" do
+      it "does not raise an error" do
+        payment = Lpt::Resources::Payment.new(result: nil)
+
+        expect {
+          payment.approved?
+        }.not_to raise_error
+      end
+
+      it "is not approved" do
+        payment = Lpt::Resources::Payment.new(result: nil)
+
+        expect(payment).not_to be_approved
+      end
+    end
   end
 
   describe "#capture" do

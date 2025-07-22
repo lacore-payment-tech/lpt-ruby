@@ -14,6 +14,8 @@ module Lpt
                     :reversal, :refunds, :amount_refundable, :result, :url
 
       def approved?
+        return false unless result.respond_to? :with_indifferent_access
+
         result.with_indifferent_access["approved"] == "true"
       end
 

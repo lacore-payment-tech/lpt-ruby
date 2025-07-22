@@ -17,10 +17,14 @@ module Lpt
       end
 
       def expiration_month
+        return false unless expiration.respond_to? :with_indifferent_access
+
         expiration.with_indifferent_access["month"]
       end
 
       def expiration_year
+        return false unless expiration.respond_to? :with_indifferent_access
+
         expiration.with_indifferent_access["year"]
       end
 
