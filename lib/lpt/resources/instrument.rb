@@ -17,10 +17,14 @@ module Lpt
       end
 
       def expiration_month
+        return false unless expiration.respond_to? :with_indifferent_access
+
         expiration.with_indifferent_access["month"]
       end
 
       def expiration_year
+        return false unless expiration.respond_to? :with_indifferent_access
+
         expiration.with_indifferent_access["year"]
       end
 
@@ -41,9 +45,13 @@ module Lpt
       end
 
       def self.tokenize(instrument_token_request)
-        resource = new
-        path = "#{resource.resources_path}/token"
+        path = token_path
         Lpt::Resources::Instrument.create(instrument_token_request, path: path)
+      end
+
+      def self.token_path(entity: nil)
+        resource = new
+        [resource.resources_path, "token", entity].compact.join("/")
       end
 
       protected

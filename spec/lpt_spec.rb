@@ -19,6 +19,28 @@ RSpec.describe Lpt, type: :model do
     end
   end
 
+  describe "#token_path" do
+    it "delegates to the instrument class" do
+      allow(Lpt::Resources::Instrument).to receive(:token_path)
+
+      Lpt.token_path
+
+      expect(Lpt::Resources::Instrument).to have_received(:token_path).once
+    end
+
+    context "when the entity is included" do
+      it "delegates to the instrument class with the entity" do
+        entity = "LEN"
+        allow(Lpt::Resources::Instrument).to receive(:token_path)
+
+        Lpt.token_path(entity: entity)
+
+        expect(Lpt::Resources::Instrument).to have_received(:token_path).once.
+          with(entity: "LEN")
+      end
+    end
+  end
+
   describe "#base_addresses" do
     context "when the environment is production" do
       it "returns the prodution base addresses" do
