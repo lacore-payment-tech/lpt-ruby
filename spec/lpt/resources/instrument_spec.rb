@@ -21,6 +21,16 @@ RSpec.describe Lpt::Resources::Instrument do
 
       expect(result).to eq("04")
     end
+
+    context "when the expiration is not set" do
+      it "does not raise an error" do
+        instrument = Lpt::Resources::Instrument.new(expiration: nil)
+
+        expect {
+          instrument.expiration_month
+        }.not_to raise_error
+      end
+    end
   end
 
   describe "#expiration_year" do
@@ -32,6 +42,16 @@ RSpec.describe Lpt::Resources::Instrument do
       result = instrument.expiration_year
 
       expect(result).to eq("2044")
+    end
+
+    context "when the expiration is not set" do
+      it "does not raise an error" do
+        instrument = Lpt::Resources::Instrument.new(expiration: nil)
+
+        expect {
+          instrument.expiration_year
+        }.not_to raise_error
+      end
     end
   end
 
