@@ -34,7 +34,18 @@ RSpec.describe Lpt::Environment do
 
       result = environment.api_base_url
 
-      expect(result).to eq("https://testing.lpt.io/")
+      expect(result).to eq("https://testing.lpt.io")
+    end
+
+    context "when not including the protocol" do
+      it "builds the full url without the protocol" do
+        environment = Lpt::Environment.new(api_base: "testing",
+                                           base_domain: "lpt.io")
+
+        result = environment.api_base_url(with_protocol: false)
+
+        expect(result).to eq("testing.lpt.io")
+      end
     end
   end
 
@@ -45,7 +56,7 @@ RSpec.describe Lpt::Environment do
 
       result = environment.cx_base_url
 
-      expect(result).to eq("https://cx.testing.lpt.io/")
+      expect(result).to eq("https://cx.testing.lpt.io")
     end
   end
 
@@ -56,7 +67,7 @@ RSpec.describe Lpt::Environment do
 
       result = environment.cx_api_base_url
 
-      expect(result).to eq("https://cx.api.testing.lpt.io/")
+      expect(result).to eq("https://cx.api.testing.lpt.io")
     end
   end
 

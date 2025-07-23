@@ -2,9 +2,21 @@
 
 require "spec_helper"
 
-RSpec.describe Lpt do
+RSpec.describe Lpt, type: :model do
   it "has a version number" do
     expect(Lpt::VERSION).not_to be_nil
+  end
+
+  describe "#api_base_url" do
+    it "delegates to the environment" do
+      env = Lpt::Environment.factory(environment: Lpt::Environment::TEST)
+      allow(env).to receive(:api_base_url)
+      allow(Lpt::Environment).to receive(:factory).and_return(env)
+
+      Lpt.api_base_url
+
+      expect(env).to have_received(:api_base_url).once
+    end
   end
 
   describe "#token_path" do

@@ -53,6 +53,8 @@ module Lpt
                 :max_network_retry_delay, :verify_ssl_certs, :ca_bundle_path,
                 :log_level
 
+    delegate :api_base_url, to: :env
+
     def environment=(environment)
       standard_env = standardize_environment(environment)
       assert_environment_is_valid! standard_env
@@ -134,6 +136,10 @@ module Lpt
 
     def envs
       Lpt::Environment::ENVIRONMENTS.values
+    end
+
+    def env
+      @env ||= Lpt::Environment.factory(environment: environment)
     end
   end
 end
