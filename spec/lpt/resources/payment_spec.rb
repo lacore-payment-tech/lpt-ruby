@@ -14,7 +14,7 @@ RSpec.describe Lpt::Resources::Payment do
   describe "#approved?" do
     context "when the result approved flag is set to true" do
       it "is approved" do
-        payment = Lpt::Resources::Payment.new(result: { approved: "true" })
+        payment = Lpt::Resources::Payment.new(result: { approved: true })
 
         expect(payment).to be_approved
       end
@@ -22,7 +22,7 @@ RSpec.describe Lpt::Resources::Payment do
 
     context "when the result approved flag is not set to true" do
       it "is not approved" do
-        payment = Lpt::Resources::Payment.new(result: { approved: "false" })
+        payment = Lpt::Resources::Payment.new(result: { approved: false })
 
         expect(payment).not_to be_approved
       end
