@@ -7,3 +7,4 @@ coverage/
 .idea/
 .ruby-version
 .rspec_status
+pkg/
