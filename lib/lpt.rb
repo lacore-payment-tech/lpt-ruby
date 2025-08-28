@@ -8,6 +8,7 @@ require "logger"
 require_relative "lpt/authentication"
 require_relative "lpt/version"
 require_relative "lpt/environment"
+require_relative "lpt/errors"
 require_relative "lpt/lpt_client"
 
 require_relative "lpt/api_operations/create"
@@ -27,8 +28,6 @@ require_relative "lpt/requests/payment_request"
 require_relative "lpt/requests/profile_request"
 
 module Lpt
-  class Error < StandardError; end
-
   DEFAULT_CA_BUNDLE_PATH = "#{__dir__}/data/ca-certificates.crt"
 
   LEVEL_DEBUG = Logger::DEBUG

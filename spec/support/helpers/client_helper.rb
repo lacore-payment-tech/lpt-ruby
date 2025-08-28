@@ -20,10 +20,18 @@ module ClientHelper
       to_return(status: status, body: response_body, headers: headers)
   end
 
+  def stub_get_request_to_fail(url:, error: RuntimeError)
+    stub_request(:get, url).to_raise(error.new)
+  end
+
   def stub_post_request(url:, status:, response_body:)
     response_headers = { "content-type": "application/json; charset=UTF-8" }
 
     stub_request(:post, url).
       to_return(status: status, body: response_body, headers: response_headers)
+  end
+
+  def stub_post_request_to_fail(url:, error: RuntimeError)
+    stub_request(:post, url).to_raise(error.new)
   end
 end
