@@ -206,6 +206,42 @@ RSpec.describe Lpt::Resources::Payment do
 
       expect(result.id).to eq(payment_id)
     end
+
+    context "when the API times out" do
+      it "raise an error to signify the resource creation failed" do
+        payment_id = "#{Lpt::PREFIX_PAYMENT}123123123"
+        stub_payment_retrieve_failure id: payment_id,
+                                      error: Faraday::TimeoutError
+
+        expect {
+          Lpt::Resources::Payment.retrieve(payment_id)
+        }.to raise_error(Lpt::ResourceRetrievalFailure)
+      end
+    end
+
+    context "when there is a server error" do
+      it "raise an error to signify the resource creation failed" do
+        payment_id = "#{Lpt::PREFIX_PAYMENT}123123123"
+        stub_payment_retrieve_failure id: payment_id,
+                                      error: Faraday::ServerError
+
+        expect {
+          Lpt::Resources::Payment.retrieve(payment_id)
+        }.to raise_error(Lpt::ResourceRetrievalFailure)
+      end
+    end
+
+    context "when a dependent resource is not found" do
+      it "raise an error to signify the resource creation failed" do
+        payment_id = "#{Lpt::PREFIX_PAYMENT}123123123"
+        stub_payment_retrieve_failure id: payment_id,
+                                      error: Faraday::ResourceNotFound
+
+        expect {
+          Lpt::Resources::Payment.retrieve(payment_id)
+        }.to raise_error(Lpt::ResourceRetrievalFailure)
+      end
+    end
   end
 
   describe ".create" do
@@ -218,6 +254,51 @@ RSpec.describe Lpt::Resources::Payment do
       result = Lpt::Resources::Payment.create(payment_request)
 
       expect(result.id).to be_present
+    end
+
+    it "makes a post request via the client" do
+      payment_request = Lpt::Requests::PaymentRequest.new
+      stub_payment_create
+      client = Lpt.client
+      allow(client).to receive(:post).and_call_original
+      stub_lpt_client client
+
+      Lpt::Resources::Payment.create(payment_request)
+
+      expect(client).to have_received(:post).once
+    end
+
+    context "when the API times out" do
+      it "raise an error to signify the resource creation failed" do
+        payment_request = Lpt::Requests::PaymentRequest.new
+        stub_payment_create_failure error: Faraday::TimeoutError
+
+        expect {
+          Lpt::Resources::Payment.create(payment_request)
+        }.to raise_error(Lpt::ResourceCreationFailure)
+      end
+    end
+
+    context "when there is a server error" do
+      it "raise an error to signify the resource creation failed" do
+        payment_request = Lpt::Requests::PaymentRequest.new
+        stub_payment_create_failure error: Faraday::ServerError
+
+        expect {
+          Lpt::Resources::Payment.create(payment_request)
+        }.to raise_error(Lpt::ResourceCreationFailure)
+      end
+    end
+
+    context "when a dependent resource is not found" do
+      it "raise an error to signify the resource creation failed" do
+        payment_request = Lpt::Requests::PaymentRequest.new
+        stub_payment_create_failure error: Faraday::ResourceNotFound
+
+        expect {
+          Lpt::Resources::Payment.create(payment_request)
+        }.to raise_error(Lpt::ResourceCreationFailure)
+      end
     end
   end
 end

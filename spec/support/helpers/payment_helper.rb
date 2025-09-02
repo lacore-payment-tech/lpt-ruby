@@ -12,6 +12,11 @@ module PaymentHelper
                       response_body: payment_response
   end
 
+  def stub_payment_create_failure(error:)
+    stub_post_request_to_fail url: "https://api.test.lpt.local/v2/payments",
+                              error: error
+  end
+
   def stub_payment_refund(id: Lpt::PREFIX_PAYMENT)
     url = "https://api.test.lpt.local/v2/payments/#{id}/refund"
     stub_post_request url: url, status: 201, response_body: payment_response
@@ -21,6 +26,12 @@ module PaymentHelper
     stub_get_request url: "https://api.test.lpt.local/v2/payments/#{id}",
                      response_body: payment_response(id: id),
                      status: 200
+  end
+
+  def stub_payment_retrieve_failure(id:, error:)
+    stub_get_request_to_fail(
+      url: "https://api.test.lpt.local/v2/payments/#{id}", error: error
+    )
   end
 
   def stub_payment_reverse(id: Lpt::PREFIX_PAYMENT)

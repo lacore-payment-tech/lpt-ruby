@@ -10,6 +10,8 @@ module Lpt
         response = client.post(path, request.to_json)
         handle_response resource, response
         resource
+      rescue Faraday::Error => e
+        raise Lpt::ResourceCreationFailure, e.message
       end
 
       protected
