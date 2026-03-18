@@ -21,6 +21,9 @@ require_relative "lpt/resources/payment"
 require_relative "lpt/resources/profile"
 
 require_relative "lpt/requests/api_request"
+require_relative "lpt/requests/params"
+
+require_relative "lpt/requests/address_params"
 require_relative "lpt/requests/empty_request"
 require_relative "lpt/requests/instrument_request"
 require_relative "lpt/requests/instrument_token_request"

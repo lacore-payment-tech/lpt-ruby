@@ -209,10 +209,11 @@ RSpec.describe Lpt::Resources::Instrument do
     before { configure_client }
 
     it "returns the created instrument" do
-      instrument_request = Lpt::Requests::InstrumentRequest.new
+      address = Lpt::Requests::AddressParams.new
+      instrument_req = Lpt::Requests::InstrumentRequest.new(address: address)
       stub_instrument_create
 
-      result = Lpt::Resources::Instrument.create(instrument_request)
+      result = Lpt::Resources::Instrument.create(instrument_req)
 
       expect(result.id).to be_present
     end
