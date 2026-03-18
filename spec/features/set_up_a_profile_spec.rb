@@ -10,8 +10,9 @@ RSpec.describe "set up a profile" do
     stub_instrument_tokenize
     stub_instrument_create
 
+    address = Lpt::Requests::AddressParams.new(postal_code: "11111")
     profile = create_profile(name: "Test Profile", email: "test@example.com",
-                             phone: "+14155555555")
+                             phone: "+14155555555", address: address)
     token = create_token(card_number: "4242424242424242", security_code: "444",
                          expiration: "04/20444")
     instrument = associate_to_profile(profile: profile, token: token)
@@ -36,9 +37,10 @@ RSpec.describe "set up a profile" do
     expect(payment.id).to start_with(Lpt::PREFIX_PAYMENT)
   end
 
-  def create_profile(name:, email:, phone:)
+  def create_profile(name:, email:, phone:, address: nil)
     profile_request = Lpt::Requests::ProfileRequest.new(
-      name: name, contact: { phone: phone, email: email }
+      name: name, contact: { phone: phone, email: email },
+      address: address
     )
     Lpt::Resources::Profile.create(profile_request)
   end

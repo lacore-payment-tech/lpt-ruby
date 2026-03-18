@@ -40,7 +40,9 @@ RSpec.describe Lpt::Resources::Profile do
     it "sends a create request" do
       profile_id = "LID123123123123"
       profile = Lpt::Resources::Profile.new(id: profile_id)
-      request = Lpt::Requests::InstrumentTokenRequest.new(token: "TKN")
+      request = Lpt::Requests::InstrumentTokenRequest.new(
+        token: "TKN", address: Lpt::Requests::AddressParams.new
+      )
       stub_instrument_create
 
       result = profile.associate_instrument(request)
@@ -91,7 +93,8 @@ RSpec.describe Lpt::Resources::Profile do
     before { configure_client }
 
     it "returns the created profile" do
-      profile_request = Lpt::Requests::ProfileRequest.new
+      address = Lpt::Requests::AddressParams.new
+      profile_request = Lpt::Requests::ProfileRequest.new(address: address)
       stub_profile_create
 
       result = Lpt::Resources::Profile.create(profile_request)

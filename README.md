@@ -33,6 +33,27 @@ The available environments are
     Lpt::Environment::TEST
     Lpt::Environment::DEV
 
+### Creating a Profile
+
+```
+address = Lpt::Requests::AddressParams.new(
+  line1: "742 Evergreen Terrace"
+  city: "Springfield"
+)
+
+request = Lpt::Requests::ProfileRequest.new(
+  name: "Homer J. Simpson",
+  profile_id: 123456789,
+  address: address,
+  contact: {
+    phone: "KL5-1230",
+    email: "homer@example.com"
+  }
+)
+
+profile = Lpt::Resources::Profile.create(request)
+```
+
 ## Development
 
 After checking out the repo, run `bin/setup` to install dependencies. Then, run
