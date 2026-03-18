@@ -1,3 +1,7 @@
+## [0.6.0] - 2026-03-18
+
+- Introduce AddressParams class for Profile and Instrument requests
+
 ## [0.5.0] - 2025-09-09
 
 - Introduces better error handling for resources
